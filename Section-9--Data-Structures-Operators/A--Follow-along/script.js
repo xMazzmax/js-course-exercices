@@ -123,25 +123,25 @@
 
 // // When a function receives an object with many properties as an argument
 // // This makes it easier to work with the properties of the object
-// const order = {
-//   starterMenu: ["Focaccia", "Bruschetta", "Garlic Bread", "Caprese Salad"],
-//   mainMenu: ["Pizza", "Pasta", "Risotto"],
+const order = {
+  starterMenu: ["Focaccia", "Bruschetta", "Garlic Bread", "Caprese Salad"],
+  mainMenu: ["Pizza", "Pasta", "Risotto"],
 
-//   confirmation: function ({ starterIndex, mainIndex, deliveryTime, address }) {
-//     console.log(
-//       `${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${deliveryTime}`
-//     );
-//   },
-// };
+  confirmation: function ({ starterIndex, mainIndex, deliveryTime, address }) {
+    console.log(
+      `${this.starterMenu[starterIndex]} and ${this.mainMenu[mainIndex]} will be delivered to ${address} at ${deliveryTime}`
+    );
+  },
+};
 
-// let orderDataFromAPI = {
-//   deliveryTime: "20:00",
-//   address: "Zürichstrasse 1",
-//   starterIndex: 1,
-//   mainIndex: 2,
-// };
+let orderDataFromAPI = {
+  deliveryTime: "20:00",
+  address: "Zürichstrasse 1",
+  starterIndex: 1,
+  mainIndex: 2,
+};
 
-// order.confirmation(orderDataFromAPI);
+order.confirmation(orderDataFromAPI);
 
 //////////////////////////////////////
 //

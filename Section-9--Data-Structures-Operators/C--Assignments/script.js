@@ -527,3 +527,160 @@ const books = [
 //   console.log(`${index + 1}. ${value}`);
 // }
 //#endregion
+
+//////////////////////////////////////
+//#region Enhanced Object Literals
+//////////////////////////////////////
+
+// 9.1 Below is the bookData array that contains other arrays. Each inner array consists of the property name (first element), and the value (second element). For example, in ['title', 'Computer Networking: A Top-Down Approach'], 'title' is the property name, and 'Computer Networking: A Top-Down Approach' is meant to be the value assigned to that property name.
+
+// Using computed properties, fill the newBook object with the properties and values from the bookData array. The first one is done already.
+
+// const bookData = [
+//   ["title", "Computer Networking: A Top-Down Approach"],
+//   ["author", ["James F. Kurose", "Keith W. Ross"]],
+//   ["publisher", "Addison Wesley"],
+// ];
+
+// const newBook = {
+//   [bookData[0][0]]: bookData[0][1],
+//   [bookData[1][0]]: bookData[1][1],
+//   [bookData[2][0]]: bookData[2][1],
+// };
+
+// console.log(newBook);
+
+// 9.2 Below is the pages variable. Add it as a property of the newBook2 object. Use the shorter way.
+
+// const pages = 880;
+
+// const newBook2 = {
+//   title: "The C Programming Language",
+//   author: ["Brian W. Kernighan", "Dennis M. Ritchie"],
+//   pages,
+// };
+
+// console.log(newBook2);
+//#endregion
+
+//////////////////////////////////////
+//#region Optional Chaining (?.)
+//////////////////////////////////////
+
+// 10.1 Write a function called getFirstKeyword that takes the book object as an argument. This function should return the first keyword from the book's keywords property (array) or undefined (if the keywords property doesn't exist). It shouldn't throw an error. Use optional chaining for that.
+
+// function getFirstKeyword(book) {
+//   return book.keywords?.[0];
+// }
+
+// const bookx = [];
+
+// console.log(getFirstKeyword(bookx));
+
+// Expected output:
+
+// "computer science"
+//#endregion
+
+//////////////////////////////////////
+//#region Looping Objects: Object Keys, Values and Entries
+//////////////////////////////////////
+
+// 11.1 Below is the entries variable that stores an empty array. Use the for-of loop together with the Object.keys() method to loop over the thirdParty.goodreads property (array) of the first book object from the books array. For each key, push a new array that contains that key to the entries array.
+
+// In the end, the entries array should be filled with arrays containing keys:
+
+// [['rating'], ['ratingsCount'], ['reviewsCount'], ['fiveStartRatingCount'], ['oneStartRatingCount']]
+
+// const entries = [];
+
+// for (const entry of Object.keys(books[0].thirdParty.goodreads))
+//   entries.push([entry]);
+
+// // Must use console.table(), as console.log() logs a reference to the array, not a snapshot. The reference is only rendered after the whole script finishes running, showing the mutated array with the values.
+// console.table(entries);
+
+// for (const element of Object.keys(books[0].thirdParty.goodreads)) {
+//   entries.push([element]);
+// }
+
+// console.log(entries);
+
+// 11.2 Use the for-of loop together with the Object.values() method and Array's entries() method to loop over thirdParty.goodreads property of the first book from the books array. Push each value to the appropriate inner array in the entries array.
+
+// for (const [index, value] of Object.values(
+//   books[0].thirdParty.goodreads
+// ).entries()) {
+//   entries[index].push(value);
+// }
+
+// console.table(entries);
+
+// 11.3 Use the Object.entries() method on the thirdParty.goodreads property of the first book from the books array. Assign the returned value to the variable called entries2.
+
+// 11.4 Log the entries and entries2 variables to the console, and compare them. They should look the same.
+
+//#endregion
+
+// // Return entire OBJECT
+// console.log(Object.entries(books[0].thirdParty.goodreads));
+// // ⬇⬇⬇
+// // Array [
+// //   0: Array [ "rating", 4.41 ]​
+// //   1: Array [ "ratingsCount", 1733 ]
+// //   2: Array [ "reviewsCount", 63 ]
+// //   3: Array [ "fiveStarRatingCount", 976 ]
+// //   4: Array [ "oneStarRatingCount", 13 ]
+// // ]
+
+// // Return object KEYS
+// console.log(Object.keys(books[0].thirdParty.goodreads));
+// // ⬇⬇⬇
+// // Array [
+// //   0: "rating"
+// //   1: "ratingsCount"
+// //   2: "reviewsCount"
+// //   3: "fiveStarRatingCount"
+// //   4: "oneStarRatingCount"
+// // ]
+
+// // Return object VALUES
+// console.log(Object.values(books[0].thirdParty.goodreads));
+// // ⬇⬇⬇
+// // Array [
+// //   0: 4.41
+// //   1: 1733
+// //   2: 63
+// //   3: 976
+// //   4: 13
+// // ]
+
+// // Return iteration of object INDEXES and [KEYS, VALUES]
+// for (const entry of Object.entries(books[0].thirdParty.goodreads).entries())
+//   console.log(entry);
+// // ⬇⬇⬇
+// // Array [ 0, [ "rating", 4.41 ] ]
+// // Array [ 1, [ "ratingsCount", 1733 ] ]
+// // Array [ 2, [ "reviewsCount", 63 ] ]
+// // Array [ 3, [ "fiveStarRatingCount", 976 ] ]
+// // Array [ 4, [ "oneStarRatingCount", 13 ] ]
+
+// // Return iteration of object INDEXES and KEYS
+// for (const entry of Object.keys(books[0].thirdParty.goodreads).entries())
+//   console.log(entry);
+// // ⬇⬇⬇
+// // Array [ 0, "rating" ]
+// // Array [ 1, "ratingsCount" ]
+// // Array [ 2, "reviewsCount" ]
+// // Array [ 3, "fiveStarRatingCount" ]
+// // Array [ 4, "oneStarRatingCount" ]
+
+// // Return iteration of object INDEXES and VALUES
+// for (const entry of Object.values(books[0].thirdParty.goodreads))
+//   console.log(entry);
+// // ⬇⬇⬇
+// // Array [ 0, 4.41 ]
+// // Array [ 1, 1733 ]
+// // Array [ 2, 63 ]
+// // Array [ 3, 976 ]
+// // Array [ 4, 13 ]

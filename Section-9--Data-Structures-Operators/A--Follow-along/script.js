@@ -228,7 +228,7 @@
 // console.log(quote.toLowerCase()); // follow the plan!
 // console.log(quote.toUpperCase()); // FOLLOW THE PLAN!
 
-// // Fix string formatting
+// // Make all characters lower case and the first one upper case
 // const passengerName = "mAxI";
 // const passengerNameLowerCase = passengerName.toLocaleLowerCase();
 // const passengerNameFormatted =
@@ -236,14 +236,15 @@
 
 // console.log(passengerNameFormatted); // Maxi
 
-// // Fix email formatting
+// // Make every character lower case
+// // Remove whitespace
 // const emailWrongFormat = " MyMail@mail.com  \n";
 // const emailRightFormat = "mymail@mail.com";
 // const emailFormatted = emailWrongFormat.toLowerCase().trim();
 
 // console.log(emailRightFormat === emailFormatted); // true
 
-// // Replace string
+// // Replace a character or substring
 // const currencyDollar = "$20,00";
 // const currencyEuro = currencyDollar.replace("$", "€").replace(",", ".");
 
@@ -255,7 +256,7 @@
 
 // console.log(quote2Replaced);
 
-// // Replace all matches of a substring in a string with RegEx
+// // Replace all substrings in a string using RegEx
 // const quote2Replaced2 = quote2.toLowerCase().replace(/alone/g, "together"); // together, together, all, all together.
 
 // console.log(quote2Replaced2);
@@ -264,7 +265,7 @@
 // const quoteBusiness = "The Key to success is action.";
 // console.log(quoteBusiness.toLowerCase().includes("key")); // true
 
-// // Check if a string contains a substring with a function
+// // Check if a string contains a substring using a function
 // const checkBaggage = function (baggageContent) {
 //   const baggageContentLowerCase = baggageContent.toLowerCase();
 

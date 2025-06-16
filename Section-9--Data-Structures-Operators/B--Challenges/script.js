@@ -1,5 +1,9 @@
 "use strict";
 
+//////////////////////////////////
+//#region Challenge #1
+//////////////////////////////////
+
 // const game = {
 //   team1: "Bayern Munich",
 //   team2: "Borrussia Dortmund",
@@ -40,10 +44,6 @@
 //     team2: 6.5,
 //   },
 // };
-
-//////////////////////////////////
-//#startregion Challenge #1
-//////////////////////////////////
 
 // We're building a football betting app.
 // Suppose we get data from a web service about a certain game. In this challenge we're gonna work with that data.
@@ -104,10 +104,52 @@
 // game.odds.team1 > game.odds.team2 &&
 //   console.log(`${game.team2} is more likely to win`);
 //#endregion
+//////////////////////////////////
 
 //////////////////////////////////
-//#startregion Challenge #2
+//#region Challenge #2
 //////////////////////////////////
+
+// const game = {
+//   team1: "Bayern Munich",
+//   team2: "Borrussia Dortmund",
+//   players: [
+//     [
+//       "Neuer",
+//       "Pavard",
+//       "Martinez",
+//       "Alaba",
+//       "Davies",
+//       "Kimmich",
+//       "Goretzka",
+//       "Coman",
+//       "Muller",
+//       "Gnarby",
+//       "Lewandowski",
+//     ],
+//     [
+//       "Burki",
+//       "Schulz",
+//       "Hummels",
+//       "Akanji",
+//       "Hakimi",
+//       "Weigl",
+//       "Witsel",
+//       "Hazard",
+//       "Brandt",
+//       "Sancho",
+//       "Gotze",
+//     ],
+//   ],
+//   score: "4:0",
+//   scored: ["Lewandowski", "Gnarby", "Lewandowski", "Hummels"],
+//   date: "Nov 9th, 2037",
+//   odds: {
+//     team1: 1.33,
+//     x: 3.25,
+//     team2: 6.5,
+//   },
+// };
 
 // Let's continue with our football betting app! Keep using the 'game' variable from before.
 
@@ -166,9 +208,10 @@
 
 // scored: ["Lewandowski", "Gnarby", "Lewandowski", "Hummels"],
 //#endregion
+//////////////////////////////////
 
 //////////////////////////////////
-//#startregion Coding Challenge #3
+//#region Coding Challenge #3
 //////////////////////////////////
 
 // Let's continue with our football betting app! This time, we have a map called 'gameEvents' (see below) with a log of the events that happened during the game. The values are the events themselves, and the keys are the minutes in which each event happened (a football game has 90 minutes plus some extra time).
@@ -215,3 +258,98 @@
 //     } ${timestamp}: ${event}`
 //   );
 // }
+//#endregion
+//////////////////////////////////
+
+//////////////////////////////////
+//#region Coding Challenge #4
+//////////////////////////////////
+
+// Write a program that receives a list of variable names written in underscore_case and convert them to camelCase.
+// The input will come from a textarea inserted into the DOM (see code below to insert the elements), and conversion will happen when the button is pressed.
+
+// Test data (pasted to textarea, including spaces):
+/*
+underscore_case 
+first_name 
+Some_Variable  
+calculate_AGE 
+delayed_departure 
+*/
+
+// Should produce this output (5 separate console.log outputs):
+/*
+underscoreCase      ✅
+firstName           ✅✅
+someVariable        ✅✅✅
+calculateAge        ✅✅✅✅
+delayedDeparture    ✅✅✅✅✅
+*/
+
+document.body.append(document.createElement("textarea"));
+document.body.append(document.createElement("button"));
+
+// document.querySelector("button").addEventListener("click", function () {
+//   let text = document.querySelector("textarea").value;
+
+//   const substrings = text
+//     // Formats to lower case
+//     .toLowerCase()
+//     // Replaces all linebreaks by commas
+//     .replaceAll("\n", ",")
+//     // Makes an array of substrings with the commas as their separator
+//     .split(",");
+
+//   const cleanedSubstrings = [];
+
+//   for (const [index, value] of substrings.entries()) {
+//     cleanedSubstrings.push(
+//       value
+//         // Removes all whitespace before and after the variable name
+//         .trim()
+//         // Replaces the underscores and the following character by the character in upper case
+//         .replaceAll(
+//           value.slice(value.indexOf("_"), value.indexOf("_") + 2),
+//           value
+//             .slice(value.indexOf("_") + 1, value.indexOf("_") + 2)
+//             .toUpperCase()
+//         )
+//         // Adds whitespace until max length (20 char) of the whole string is reached
+//         .padEnd(20) +
+//         // Adds the emoji times the index number of the array entry + 1
+//         "✅".repeat(index + 1)
+//     );
+//   }
+
+//   for (const camelCaseVariable of cleanedSubstrings)
+//     console.log(camelCaseVariable);
+// });
+
+// // Sample solution
+// document.querySelector("button").addEventListener("click", function () {
+//   let text = document.querySelector("textarea").value;
+
+//   const substrings = text
+//     // Formats to lower case
+//     .toLowerCase()
+//     // Makes an array of substrings with the linebreaks as their separator
+//     .split("\n");
+
+//   for (const [index, value] of substrings.entries()) {
+//     // Removes all whitespace before and after the variable name and splits it into two string using _ as their separator
+//     const [firstSubstring, secondSubstring] = value.trim().split("_");
+
+//     // Replaces the first character of the second substring by the same character in upper case
+//     const variableInCamelCase = `${firstSubstring}${secondSubstring.replace(
+//       secondSubstring[0],
+//       secondSubstring[0].toUpperCase()
+//     )}`;
+
+//     // Adds whitespace until max length (20 char) of the whole string is reached
+//     // Adds the emoji times the index number of the array entry + 1
+//     console.log(`${variableInCamelCase.padEnd(20)} ${"✅".repeat(index + 1)}`);
+//   }
+// });
+
+//#endregion
+//////////////////////////////////

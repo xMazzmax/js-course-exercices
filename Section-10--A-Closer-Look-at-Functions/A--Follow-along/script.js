@@ -154,5 +154,19 @@
 
 // document.querySelector(".buy").addEventListener("click", logJasmin("female"));
 
+// // Partial application
+// const addTax = (rate, value) => value + (rate / 100) * value;
+
+// const addVATSwitzerland = function (value) {
+//   return function () {
+//     console.log(value + (8.1 / 100) * value);
+//   };
+// };
+// console.log(addVATSwitzerland(100));
+
+// document
+//   .querySelector(".buy")
+//   .addEventListener("click", addVATSwitzerland(100));
+
 //#endregion
 //////////////////////////////////

@@ -75,6 +75,10 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
 
+// //////////////////////////////////////
+// // 149. Simple Array Methods
+// //////////////////////////////////////
+
 // const array = [
 //   [1, 2],
 //   [3, 4],
@@ -94,4 +98,59 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 // const shallowCopy2 = array2;
 
-const array
+// //              0:   1:   2:   3:   4:
+// const array = ["a", "b", "c", "d", "e"];
+// const array2 = ["f", "g", "h", "i", "j"];
+
+// // Creates a shallow copy of an array
+// console.log(array.slice()); // ["a", "b", "c", "d", "e"]
+
+// // The spread operator also creates a shallow copy of an array
+// console.log([...array]); // ["a", "b", "c", "d", "e"]
+
+// // Use the slice method over the spread operator, to be able to chain methods
+// console.log(array.slice().reverse()); // ["e", "d", "c", "b", "a"]
+
+// // Using the first parameter sets a starting index (inclusive of the index element)
+// console.log(array.slice(1)); // ["b", "c", "d", "e"]
+
+// // Using a negative index makes the method start counting from the end (-1 returns the last element)
+// console.log(array.slice(-1)); // ["e"]
+
+// // Using the second parameter sets an ending index (exclusive of the index element)
+// console.log(array.slice(1, 4)); // ["b", "c", "d"]
+// console.log(array.slice(1, -1)); // ["b", "c", "d"]
+// const arrayXtra = [1, 2];
+
+// // Removes and returns items and optionally inserts other items from the starting position
+// // splice(start: number, deleteCount?: number): string[]
+// // splice(start: number, deleteCount: number, ...items: string[]): string[]
+// console.log(array.splice(1, 2, ...arrayXtra)); // ["b", "c"]
+// console.log(array); // ["a", 1, 2, "d", "e"]
+
+// // Mutates the array permanently
+// console.log(array.reverse()); // ["e", "d", 2, 1, "a"]
+
+// // Adds arrays to one another
+// console.log(array.concat(array2)); // ["e", "d", 2, 1, "a", "f", "g", "h", "i", "j"]
+// console.log([...array, ...array2]); // ["e", "d", 2, 1, "a", "f", "g", "h", "i", "j"]
+// console.log(array.join("_")); // e_d_2_1_a
+
+// const array3 = ["a", "b", "c", "d", "e"];
+
+// // Remove the first element permanently
+// console.log(array3.shift()); // "a"
+// console.log(array3); // ["b", "c", "d", "e"]
+
+// // Add element to the beginning permanently
+// console.log(array3.unshift("z")); // 5 (new length of the array)
+// console.log(array3); // ["z", "b", "c", "d", "e"]
+
+// // Remove the last element permanently
+// console.log(array3.pop()); // "e"
+// console.log(array3); // ["z", "b", "c", "d"]
+
+// // Add element to the end permanently
+// console.log(array3.push("f")); // 5 (new length of the array)
+// console.log(array3); // ["z", "b", "c", "d", "f"]
+// console.log(array[-1]);

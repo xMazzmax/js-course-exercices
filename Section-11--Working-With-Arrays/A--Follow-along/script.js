@@ -175,6 +175,32 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //     `This is the value ${element} with the index ${index} from a total of ${arr.length} values`
 //   );
 // });
-//////////////////////////////////´
+//#endregion
+//////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+//#region 154. Creating DOM Elements (account transactions)
+//////////////////////////////////////////////////////////////////////
+
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+
+  movements.forEach(function (movement, index) {
+    const movementType = movement > 0 ? "deposit" : "withdrawal";
+
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${movementType}">${
+      index + 1
+    } ${movementType.toUpperCase()}</div>
+      <div class="movements__date"></div>
+      <div class="movements__value">${movement}€</div>
+    </div>`;
+
+    containerMovements.insertAdjacentHTML("afterbegin", html);
+  });
+};
+
+displayMovements(movements);
 //#endregion
 //////////////////////////////////

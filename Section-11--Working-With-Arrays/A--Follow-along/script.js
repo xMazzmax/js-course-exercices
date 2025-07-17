@@ -169,12 +169,29 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //#region 151. Looping Arrays: forEach
 //////////////////////////////////////////////////////////////////////
 
-// const array = ["a", "b", "c"];
-// array.forEach(function (element, index, arr) {
+// const someArray = ["a", "b", "c"];
+// someArray.forEach(function (element, index, array) {
 //   console.log(
-//     `This is the value ${element} with the index ${index} from a total of ${arr.length} values`
+//     `This is the value ${element} with the index ${index} from a total of ${array.length} values`
 //   );
 // });
+//#endregion
+//////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+//#region 152. forEach With Maps and Sets
+//////////////////////////////////////////////////////////////////////
+
+// forEach on Map
+currencies.forEach((value, key, map) => {
+  console.log(`${key}: ${value} (Map size: ${map.size})`);
+});
+
+// forEach on Set
+const currenciesUnique = new Set(["EUR", "CHF", "BRL", "EUR", "EUR", "USD"]);
+currenciesUnique.forEach((value, _, set) => {
+  console.log(`${_}: ${value} (Set size: ${set.size})`);
+});
 //#endregion
 //////////////////////////////////
 

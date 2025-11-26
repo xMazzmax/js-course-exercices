@@ -334,7 +334,7 @@ document
 // );
 //#endregion
 
-//#region 206 Building a Tabbed Component
+//#region 206. Building a Tabbed Component
 const operations = document.querySelector(".operations");
 const tabsContainer = document.querySelector(".operations__tab-container");
 const tabs = document.querySelectorAll(".operations__tab");
@@ -346,16 +346,51 @@ tabsContainer.addEventListener("click", event => {
   // Stop the callback if clicked inside the tabs container but outside and tab
   if (!clickedTab) return;
 
-  // Remove the active state style from all tabs and tab contents
+  // Remove the active state classes from all tabs and tab contents
   tabs.forEach(tab => tab.classList.remove("operations__tab--active"));
   tabsContent.forEach(tabContent =>
     tabContent.classList.remove("operations__content--active")
   );
 
-  // Add the active state style to the clicked tab and correspondent tab content
+  // Add the active state classes to the clicked tab and correspondent tab content
   clickedTab.classList.add("operations__tab--active");
   operations
     .querySelector(`.operations__content--${clickedTab.dataset.tab}`)
     .classList.add("operations__content--active");
 });
+//#endregion
+
+//#region 207. Passing Arguments to Event Handlers
+const navigation = document.querySelector(".nav");
+
+const navLinkMousePassHandler = function (event) {
+  // Stop the callback if the hovered through element is not a .nav__link
+  if (!event.target.classList.contains("nav__link")) return;
+
+  const currentLink = event.target;
+  const navListLinks = currentLink
+    .closest(".nav")
+    .querySelectorAll(".nav__link");
+  const logo = event.target.closest(".nav").querySelector(".nav__logo");
+
+  navListLinks.forEach(link => {
+    if (link !== currentLink) link.style.opacity = this.opacity;
+  });
+  logo.style.opacity = this.opacity;
+};
+
+// the first argument of .bind() becomes the "this" value of the callback function
+// any arguments defined after that are inserted before the event object
+// the event object is always passed automatically
+// since no arguments are defined (besides the "this" value) in the examples below,
+// the "event" parameter of navLinkMousePassHandler becomes the event object by default
+// => thisValue?, ...boundArgs?, eventObject
+navigation.addEventListener(
+  "mouseover",
+  navLinkMousePassHandler.bind({ backgroundColor: "orangered", opacity: 0.5 })
+);
+navigation.addEventListener(
+  "mouseout",
+  navLinkMousePassHandler.bind({ backgroundColor: "orangered", opacity: 1 })
+);
 //#endregion

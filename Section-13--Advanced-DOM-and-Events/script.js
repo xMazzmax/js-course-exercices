@@ -405,3 +405,25 @@ document.addEventListener("scroll", () => {
   else navigation.classList.remove("sticky");
 });
 //#endregion
+
+//#region 209. A Better Way of Implementing a Sticky Navigation: The Intersection Observer API
+const header = document.querySelector(".header");
+const headerObserverCallback = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) navigation.classList.add("sticky");
+  else navigation.classList.remove("sticky");
+};
+const headerObserverOptions = {
+  // viewport as root
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navigation.getBoundingClientRect().height}px`,
+};
+const headerObserver = new IntersectionObserver(
+  headerObserverCallback,
+  headerObserverOptions
+);
+headerObserver.observe(header);
+//#endregion

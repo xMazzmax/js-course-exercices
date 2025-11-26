@@ -394,3 +394,14 @@ navigation.addEventListener(
   navLinkMousePassHandler.bind({ backgroundColor: "orangered", opacity: 1 })
 );
 //#endregion
+
+//#region 208. Implementing a Sticky Navigation: The Scroll Event
+document.addEventListener("scroll", () => {
+  if (
+    window.scrollY >=
+    window.scrollY + featuresSection.getBoundingClientRect().top
+  )
+    navigation.classList.add("sticky");
+  else navigation.classList.remove("sticky");
+});
+//#endregion

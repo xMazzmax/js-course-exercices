@@ -410,7 +410,6 @@ document.addEventListener("scroll", () => {
 const header = document.querySelector(".header");
 const headerObserverCallback = function (entries, observer) {
   const [entry] = entries;
-  console.log(entry);
 
   if (!entry.isIntersecting) navigation.classList.add("sticky");
   else navigation.classList.remove("sticky");
@@ -426,4 +425,32 @@ const headerObserver = new IntersectionObserver(
   headerObserverOptions
 );
 headerObserver.observe(header);
+//#endregion
+
+//#region 210. Revealing Elements on Scroll
+const sections = document.querySelectorAll(".section");
+const sectionObserverCallback = entries => {
+  entries.forEach(entry => {
+    const entryIsHidden = entry.target.classList.contains("section--hidden");
+
+    if (entryIsHidden && entry.isIntersecting) {
+      entry.target.classList.remove("section--hidden");
+      sectionObserver.unobserve(entry.target);
+    }
+  });
+};
+const sectionObserverOptions = { root: null, threshold: 0.2 };
+const sectionObserver = new IntersectionObserver(
+  sectionObserverCallback,
+  sectionObserverOptions
+);
+
+sections.forEach(section => {
+  section.classList.add("section--hidden");
+  sectionObserver.observe(section);
+});
+//#endregion
+
+//#region
+
 //#endregion

@@ -451,6 +451,22 @@ sections.forEach(section => {
 });
 //#endregion
 
-//#region
+//#region 212. Lazy Loading Images
+const lazyLoadingImages = document.querySelectorAll("img[data-src]");
+const lazyLoadingImagesObserverCallback = entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      console.log("intersecting");
+      entry.target.src = entry.target.dataset.src;
+      entry.target.classList.remove("lazy-img");
+      lazyLoadingImagesObserver.unobserve(entry.target);
+    }
+  });
+};
+const lazyLoadingImagesObserver = new IntersectionObserver(
+  lazyLoadingImagesObserverCallback,
+  { root: null, rootMargin: "200px", threshold: 0.1 }
+);
 
+lazyLoadingImages.forEach(image => lazyLoadingImagesObserver.observe(image));
 //#endregion

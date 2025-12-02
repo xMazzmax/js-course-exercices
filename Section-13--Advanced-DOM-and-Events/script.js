@@ -456,7 +456,6 @@ const lazyLoadingImages = document.querySelectorAll("img[data-src]");
 const lazyLoadingImagesObserverCallback = entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      console.log("intersecting");
       entry.target.src = entry.target.dataset.src;
       entry.target.classList.remove("lazy-img");
       lazyLoadingImagesObserver.unobserve(entry.target);
@@ -469,4 +468,77 @@ const lazyLoadingImagesObserver = new IntersectionObserver(
 );
 
 lazyLoadingImages.forEach(image => lazyLoadingImagesObserver.observe(image));
+//#endregion
+
+//#region 213. Building a Slider Component
+// Wrapping everything inside a function prevents global namespace pollution
+const sliderMain = () => {
+  const slides = document.querySelectorAll(".slide");
+  const nextSlideButton = document.querySelector(".slider__btn--right");
+  const previousSlideButton = document.querySelector(".slider__btn--left");
+  const dotsContainer = document.querySelector(".dots");
+  let currentSlideIndex = 0;
+
+  slides.forEach((_, index) =>
+    dotsContainer.insertAdjacentHTML(
+      "beforeend",
+      `<button class="dots__dot" data-slide="${index}"></button>`
+    )
+  );
+
+  const setSliderDotState = index => {
+    const dot = dotsContainer.children[index];
+    dot.dataset.slide == currentSlideIndex
+      ? dot.classList.add("dots__dot--active")
+      : dot.classList.remove("dots__dot--active");
+  };
+
+  const slidesTranslateX = () =>
+    slides.forEach((slide, index) => {
+      slide.style = `transform: translateX(${
+        100 * (index - currentSlideIndex)
+      }%)`;
+      setSliderDotState(index);
+    });
+
+  const moveToNextSlide = () => {
+    currentSlideIndex === slides.length - 1
+      ? (currentSlideIndex = 0)
+      : currentSlideIndex++;
+
+    slidesTranslateX();
+  };
+
+  const moveToPreviousSlide = () => {
+    currentSlideIndex === 0
+      ? (currentSlideIndex = slides.length - 1)
+      : currentSlideIndex--;
+
+    slidesTranslateX();
+  };
+
+  slidesTranslateX();
+
+  nextSlideButton.addEventListener("click", moveToNextSlide);
+  previousSlideButton.addEventListener("click", moveToPreviousSlide);
+  document.addEventListener("keydown", event => {
+    event.key === "ArrowRight" && moveToNextSlide();
+    event.key === "ArrowLeft" && moveToPreviousSlide();
+  });
+
+  dotsContainer.addEventListener("click", event => {
+    if (!event.target.classList.contains("dots__dot")) return;
+    [...dotsContainer.children].forEach(child => {
+      if (child === event.target) {
+        currentSlideIndex = child.dataset.slide;
+        slidesTranslateX();
+        child.classList.add("dots__dot--active");
+      } else {
+        child.classList.remove("dots__dot--active");
+      }
+    });
+  });
+};
+
+sliderMain();
 //#endregion

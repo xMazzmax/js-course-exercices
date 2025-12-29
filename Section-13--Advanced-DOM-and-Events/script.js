@@ -542,3 +542,26 @@ const sliderMain = () => {
 
 sliderMain();
 //#endregion
+
+//#region 215. DOM Lifecycle Events
+// // Fires once the HTML is parsed and all encountered regular (sync) JS is executed (each execution pauses HTML parsing until finished)
+// // => Doesn't wait for images, CSS, iframes, fonts, asynchronous scripts etc. to load
+// // By placing JS files by the end of the HTML, the same is achieved as wrapping all the content of a JS file with this event listener
+// document.addEventListener("DOMContentLoaded", function (event) {});
+
+// // Fires once all ressources (HTML, JS, CSS, images, linked libraries) have been completely loaded
+// window.addEventListener("load", function (event) {});
+
+// // Fires when the user tries to refresh, close the page or navigate away.
+// window.addEventListener("beforeunload", function (event) {});
+
+// // The following implementation requests the browser to show a confirmation dialog before refreshing, closing the page or navigating away. Whether the request is accepted or ignored, and what dialog content is displayed, is browser-dependent.
+// window.addEventListener("beforeunload", function (event) {
+//   // Recommended
+//   event.preventDefault();
+
+//   // Included for legacy support
+//   event.returnValue = "";
+// });
+
+//#endregion

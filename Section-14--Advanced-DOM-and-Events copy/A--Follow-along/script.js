@@ -87,60 +87,89 @@
 //#endregion
 
 //#region 227. Setters and Getters
-// Every object in JS can have ´getter´ and ´setter´ properties. These properties are called "accessor properties", while regular properties are called "data properties". Setters and getters can be implemented independently of one another (e.g. defining just 1 of them).
+// // Every object in JS can have ´getter´ and ´setter´ properties. These properties are called "accessor properties", while regular properties are called "data properties". Setters and getters can be implemented independently of one another (e.g. defining just 1 of them).
 
-const account = {
-  owner: "Max",
-  movements: [100, -50, 200, 500],
+// const account = {
+//   owner: "Max",
+//   movements: [100, -50, 200, 500],
 
-  // getter that returns the last value of the array
-  get latestMovement() {
-    return this.movements[this.movements.length - 1];
-  },
+//   // getter that returns the last value of the array
+//   get latestMovement() {
+//     return this.movements[this.movements.length - 1];
+//   },
 
-  // setter that adds a value to the end of the array
-  // every setter needs to have exactly 1 parameter to be set
-  set latestMovement(movement) {
-    this.movements.push(movement);
-  },
-};
+//   // setter that adds a value to the end of the array
+//   // every setter needs to have exactly 1 parameter to be set
+//   set latestMovement(movement) {
+//     this.movements.push(movement);
+//   },
+// };
 
-// even though they contain methods, getters and setters are used like regular properties
-account.latestMovement; // gets 500
-account.latestMovement = -200; // sets -200
-account.latestMovement; // gets -200
+// // even though they contain methods, getters and setters are used like regular properties
+// account.latestMovement; // gets 500
+// account.latestMovement = -200; // sets -200
+// account.latestMovement; // gets -200
 
-account.movements; // [100, -50, 200, 500, -200]
+// account.movements; // [100, -50, 200, 500, -200]
 
-// Since classes are fundamentally objects, they can also create getters and setters
-class Person {
-  constructor(name, birthYear, sex) {
-    this.name = name;
-    this.birthYear = birthYear;
-    this.sex = sex;
-  }
+// // Since classes are fundamentally objects, they can also create getters and setters
+// class Person {
+//   constructor(name, birthYear, sex) {
+//     this.name = name;
+//     this.birthYear = birthYear;
+//     this.sex = sex;
+//   }
 
-  calculateAge() {
-    console.log(new Date().getFullYear() - this.birthYear);
-  }
+//   calculateAge() {
+//     console.log(new Date().getFullYear() - this.birthYear);
+//   }
 
-  get sex() {
-    return this._sex;
-  }
+//   get sex() {
+//     return this._sex;
+//   }
 
-  // setters are great for validation
-  set sex(sex) {
-    sex === "m" || sex === "f"
-      ? (this._sex = sex)
-      : console.error(
-          `Error: The sex property was not set because the value "${sex}" is invalid. It must be either "m" or "f".`
-        );
-  }
-}
+//   // setters are great for validation
+//   set sex(sex) {
+//     sex === "m" || sex === "f"
+//       ? (this._sex = sex)
+//       : console.error(
+//           `Error: The sex property was not set because the value "${sex}" is invalid. It must be either "m" or "f".`
+//         );
+//   }
+// }
 
-const jane = new Person("Jane", 1985, "female");
-jane.sex; // undefined
-jane.sex = "f";
-jane.sex; // f
-jane; // { name: "Jane", birthYear: 1985, _sex: "f" }
+// const jane = new Person("Jane", 1985, "female");
+// jane.sex; // undefined
+// jane.sex = "f";
+// jane.sex; // f
+// jane; // { name: "Jane", birthYear: 1985, _sex: "f" }
+//#endregion
+
+//#region 228. Static methods
+// // Static methods are methods that belong to the constructor itself and are not accessible by its instances. They're usually used for behavior that is related to the class as a whole (e.g. the built-in Array.isArray())
+
+// class Person {
+//   constructor(name) {
+//     this.name = name;
+//   }
+
+//   bla() {
+//     console.log("Bla!");
+//   }
+
+//   static sayHiTo(name) {
+//     console.log(`Hi ${name}! 🙋‍♂️`);
+//   }
+// }
+
+// Person.sayHiTo("Danielle");
+
+// const john = new Person("John");
+// // Does not contain .sayHiTo()
+// console.log(Object.getPrototypeOf(john));
+// // {
+// //   bla: function bla()
+// //   constructor: class Person { constructor(name) }
+// //   <prototype>: Object { … }
+// // }
 //#endregion

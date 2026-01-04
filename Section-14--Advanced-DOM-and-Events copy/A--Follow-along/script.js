@@ -173,3 +173,31 @@
 // //   <prototype>: Object { … }
 // // }
 //#endregion
+
+//#region 229. Object.create
+// // Object.create is used to set the prototype of an object to another specific object
+//
+// const PersonPrototype = {
+//   calculateAge() {
+//     console.log(new Date().getFullYear() - this.birthYear);
+//   },
+
+//   // To be able to set initial properties in a structured way programmatically, a custom init function is defined
+//   initializeProperties(name, birthYear) {
+//     this.name = name;
+//     this.birthYear = birthYear;
+//   },
+// };
+
+// const mark = Object.create(PersonPrototype);
+// // Setting initial properties manually
+// mark.name = "Mark";
+// mark.birthYear = 1970;
+// mark.calculateAge();
+
+// const cloe = Object.create(PersonPrototype);
+// // Setting initial properties programmatically
+// cloe.initializeProperties("Cloe", 2000);
+// cloe; // { name: "Cloe", birthYear: 2000 }
+// cloe.calculateAge(); // 26
+//#endregion

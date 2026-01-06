@@ -201,3 +201,41 @@
 // cloe; // { name: "Cloe", birthYear: 2000 }
 // cloe.calculateAge(); // 26
 //#endregion
+
+//#region 231. Inheritance Between "Classes": Constructor Functions
+const Person = function (name, birthYear) {
+  this.name = name;
+  this.birthYear = birthYear;
+};
+
+Person.prototype.calculateAge = function () {
+  return new Date().getFullYear() - this.birthYear;
+};
+
+const Student = function (name, birthYear, degree) {
+  // Must use .call() to pass the `this` of Student to Person
+  Person.call(this, name, birthYear);
+  this.degree = degree;
+};
+
+Student.prototype.constructor; // function Student(...)
+
+// Set the prototype of Student to the Person constructor function
+// Must be done before adding any properties to the prototype because Object.create() returns an empty object that would wipe them out
+Student.prototype = Object.create(Person.prototype);
+Student.prototype.constructor; // function Person(...)
+
+Student.prototype.sayHiTo = name => {
+  console.log(`Hi ${name}! 🙋‍♂️`);
+};
+
+// Restore the right constructor reference
+Student.prototype.constructor = Student;
+Student.prototype.constructor; // function Student(...)
+
+const max = new Student("Max", 1999, "Computer Science");
+max.calculateAge(); // 27
+
+max instanceof Student; // true
+max instanceof Person; // true
+//#endregion

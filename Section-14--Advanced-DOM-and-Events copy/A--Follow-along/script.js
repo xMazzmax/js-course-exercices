@@ -239,3 +239,39 @@ max.calculateAge(); // 27
 max instanceof Student; // true
 max instanceof Person; // true
 //#endregion
+
+//#region 233. Inheritance Between "Classes": ES6 Classes
+class Person {
+  constructor(name, birthYear) {
+    this.name = name;
+    this.birthYear = birthYear;
+  }
+
+  calculateAge() {
+    console.log(new Date().getFullYear() - this.birthYear);
+  }
+}
+
+class Student extends Person {
+  constructor(name, birthYear, degree) {
+    // super() must be called first so the parent class (Person) can initialize the instance, before the subclass (Student) extends it with its own properties
+    super(name, birthYear);
+    this.degree = degree;
+  }
+
+  sayHiTo(name) {
+    console.log(`Hi ${name}! I'm ${this.name} 🙋‍♂️`);
+  }
+}
+
+const liam = new Student("Liam", 1997, "Ph.D. in Nutritional Sciences");
+console.log(liam); // { name: "Liam", birthYear: 1997, degree: "Nutritionist" }
+liam.sayHiTo("Pamela"); // Hi Pamela! I'm Liam 🙋‍♂️
+liam.calculateAge(); // 29
+
+// // If a class extends another class and no constructor function is defined, the JS engine generates a default constructor which automatically calls the parent constructor with super()
+// class Student extends Person {}
+
+// const ben = new Student("Ben", 2002);
+// ben; // { name: "Ben", birthYear: 2002 }
+//#endregion

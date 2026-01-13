@@ -203,75 +203,105 @@
 //#endregion
 
 //#region 231. Inheritance Between "Classes": Constructor Functions
-const Person = function (name, birthYear) {
-  this.name = name;
-  this.birthYear = birthYear;
-};
+// const Person = function (name, birthYear) {
+//   this.name = name;
+//   this.birthYear = birthYear;
+// };
 
-Person.prototype.calculateAge = function () {
-  return new Date().getFullYear() - this.birthYear;
-};
+// Person.prototype.calculateAge = function () {
+//   return new Date().getFullYear() - this.birthYear;
+// };
 
-const Student = function (name, birthYear, degree) {
-  // Must use .call() to pass the `this` of Student to Person
-  Person.call(this, name, birthYear);
-  this.degree = degree;
-};
+// const Student = function (name, birthYear, degree) {
+//   // Must use .call() to pass the `this` of Student to Person
+//   Person.call(this, name, birthYear);
+//   this.degree = degree;
+// };
 
-Student.prototype.constructor; // function Student(...)
+// Student.prototype.constructor; // function Student(...)
 
-// Set the prototype of Student to the Person constructor function
-// Must be done before adding any properties to the prototype because Object.create() returns an empty object that would wipe them out
-Student.prototype = Object.create(Person.prototype);
-Student.prototype.constructor; // function Person(...)
+// // Set the prototype of Student to the Person constructor function
+// // Must be done before adding any properties to the prototype because Object.create() returns an empty object that would wipe them out
+// Student.prototype = Object.create(Person.prototype);
+// Student.prototype.constructor; // function Person(...)
 
-Student.prototype.sayHiTo = name => {
-  console.log(`Hi ${name}! 🙋‍♂️`);
-};
+// Student.prototype.sayHiTo = name => {
+//   console.log(`Hi ${name}! 🙋‍♂️`);
+// };
 
-// Restore the right constructor reference
-Student.prototype.constructor = Student;
-Student.prototype.constructor; // function Student(...)
+// // Restore the right constructor reference
+// Student.prototype.constructor = Student;
+// Student.prototype.constructor; // function Student(...)
 
-const max = new Student("Max", 1999, "Computer Science");
-max.calculateAge(); // 27
+// const max = new Student("Max", 1999, "Computer Science");
+// max.calculateAge(); // 27
 
-max instanceof Student; // true
-max instanceof Person; // true
+// max instanceof Student; // true
+// max instanceof Person; // true
 //#endregion
 
 //#region 233. Inheritance Between "Classes": ES6 Classes
-class Person {
-  constructor(name, birthYear) {
-    this.name = name;
-    this.birthYear = birthYear;
-  }
+// class Person {
+//   constructor(name, birthYear) {
+//     this.name = name;
+//     this.birthYear = birthYear;
+//   }
 
+//   calculateAge() {
+//     console.log(new Date().getFullYear() - this.birthYear);
+//   }
+// }
+
+// class Student extends Person {
+//   constructor(name, birthYear, degree) {
+//     // super() must be called first so the parent class (Person) can initialize the instance, before the subclass (Student) extends it with its own properties
+//     super(name, birthYear);
+//     this.degree = degree;
+//   }
+
+//   sayHiTo(name) {
+//     console.log(`Hi ${name}! I'm ${this.name} 🙋‍♂️`);
+//   }
+// }
+
+// const liam = new Student("Liam", 1997, "Ph.D. in Nutritional Sciences");
+// console.log(liam); // { name: "Liam", birthYear: 1997, degree: "Nutritionist" }
+// liam.sayHiTo("Pamela"); // Hi Pamela! I'm Liam 🙋‍♂️
+// liam.calculateAge(); // 29
+
+// // // If a class extends another class and no constructor function is defined, the JS engine generates a default constructor which automatically calls the parent constructor with super()
+// // class Student extends Person {}
+
+// // const ben = new Student("Ben", 2002);
+// // ben; // { name: "Ben", birthYear: 2002 }
+//#endregion
+
+//#region 234. Inheritance Between "Classes": Object.create()
+const PersonPrototype = {
   calculateAge() {
     console.log(new Date().getFullYear() - this.birthYear);
-  }
-}
+  },
 
-class Student extends Person {
-  constructor(name, birthYear, degree) {
-    // super() must be called first so the parent class (Person) can initialize the instance, before the subclass (Student) extends it with its own properties
-    super(name, birthYear);
-    this.degree = degree;
-  }
+  initializeProperties(name, birthYear) {
+    this.name = name;
+    this.birthYear = birthYear;
+  },
 
   sayHiTo(name) {
     console.log(`Hi ${name}! I'm ${this.name} 🙋‍♂️`);
-  }
-}
+  },
+};
 
-const liam = new Student("Liam", 1997, "Ph.D. in Nutritional Sciences");
-console.log(liam); // { name: "Liam", birthYear: 1997, degree: "Nutritionist" }
-liam.sayHiTo("Pamela"); // Hi Pamela! I'm Liam 🙋‍♂️
-liam.calculateAge(); // 29
+const StudentPrototype = Object.create(PersonPrototype);
 
-// // If a class extends another class and no constructor function is defined, the JS engine generates a default constructor which automatically calls the parent constructor with super()
-// class Student extends Person {}
+StudentPrototype.initializeProperties = function (name, birthYear, degree) {
+  PersonPrototype.initializeProperties.call(this, name, birthYear);
+  this.degree = degree;
+};
 
-// const ben = new Student("Ben", 2002);
-// ben; // { name: "Ben", birthYear: 2002 }
+const matt = Object.create(StudentPrototype);
+matt.initializeProperties("Matt", 1890, "Master of Philosophy");
+matt; // { name: "Matt", birthYear: 1890, degree: "Master of Philosophy" }
+matt.sayHiTo("Jennifer"); // Hi Jennifer! I'm Matt 🙋‍♂️
+matt.calculateAge(); // 136
 //#endregion

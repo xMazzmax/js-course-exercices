@@ -307,37 +307,110 @@
 //#endregion
 
 //#region 235. Constructor design: Object Invariants and Internal State Ownership
-class Account {
-  constructor(movements) {
-    // should be an array
-    this.movements = movements;
-  }
-}
+// class Account {
+//   constructor(movements) {
+//     // should be an array
+//     this.movements = movements;
+//   }
+// }
 
-// Mandatory repetition of initialization instead of inside the class
-const joe = new Account([]); // { movements: [] }
-const jane = new Account([]); // { movements: [] }
-// No invariant enforcement
-const jil = new Account("bla"); // { movements: "bla" }
+// // Mandatory repetition of initialization instead of inside the class
+// const joe = new Account([]); // { movements: [] }
+// const jane = new Account([]); // { movements: [] }
+// // No invariant enforcement
+// const jil = new Account("bla"); // { movements: "bla" }
+
+// class Account {
+//   // The constructor should only accept the data required to create a valid initial object state
+//   constructor(owner, password, currency) {
+//     this.owner = owner;
+//     this.password = password;
+//     this.currency = currency;
+//     // Initialize the collection (array) directly so the invariant holds (=> movements is always an array)
+//     this.movements = [];
+//   }
+
+//   deposit(amount) {
+//     this.movements.push(Math.abs(amount));
+//   }
+
+//   withdraw(amount) {
+//     this.movements.push(-Math.abs(amount));
+//   }
+// }
+
+// const mia = new Account("Mia", 12345678, "EUR");
+//#endregion
+
+//#region 236. Encapsulation: Private Class Fields and Methods
+
+// In JS, OOP encapsulation inside classes is provided by # private members (fields and methods), which are enforced at the language level (not just by convention or patterns) and independent of prototypal inheritance.
 
 class Account {
-  // The constructor should only accept the data required to create a valid initial object state
+  // public fields
+  bank = "Gold";
+  locale = navigator.language;
+
+  // private fields
+  #owner;
+  #password;
+  #movements = [];
+
   constructor(owner, password, currency) {
-    this.owner = owner;
-    this.password = password;
+    this.#owner = owner;
+    this.#password = password;
     this.currency = currency;
-    // Initialize the collection (array) directly so the invariant holds (=> movements is always an array)
-    this.movements = [];
   }
 
+  // public methods
   deposit(amount) {
-    this.movements.push(Math.abs(amount));
+    this.#movements.push(Math.abs(amount));
+    this.#printBalance();
   }
 
   withdraw(amount) {
-    this.movements.push(-Math.abs(amount));
+    this.#movements.push(-Math.abs(amount));
+    this.#printBalance();
+  }
+
+  // private method
+  #printBalance() {
+    console.log(
+      this.#movements.reduce(
+        (previousVal, currentVal) => previousVal + currentVal
+      )
+    );
+  }
+
+  // static method
+  static create(owner, password, currency) {
+    if (!this.#isValidPassword(password)) {
+      throw new Error("Invalid password");
+    }
+
+    return new Account(owner, password, currency);
+  }
+
+  // private static method
+  static #isValidPassword(password) {
+    return Number.isInteger(password) && password.toString().length >= 6;
   }
 }
 
-const mia = new Account("Mia", 12345678, "EUR");
+const cloe = new Account("Cloe", 1234, "EUR");
+cloe; // { currency: "EUR", #owner: "Cloe", #password: 1234, #movements: [] }
+// syntax error on direct access attempt on private members
+// cloe.#movements;
+// cloe.#printBalance();
+
+cloe.deposit(200); // 200
+cloe.deposit(1000); // 1200
+cloe.withdraw(100); // 1100
+
+cloe;
+// => { ... #movements: Array [ 200, 1000, -100 ] }
+cloe.movements = "";
+// => { ... #movements: Array [ 200, 1000, -100 ], movements: "" }
+
+const pam = Account.create("Pam", 123456, "USD");
 //#endregion

@@ -277,31 +277,67 @@
 //#endregion
 
 //#region 234. Inheritance Between "Classes": Object.create()
-const PersonPrototype = {
-  calculateAge() {
-    console.log(new Date().getFullYear() - this.birthYear);
-  },
+// const PersonPrototype = {
+//   calculateAge() {
+//     console.log(new Date().getFullYear() - this.birthYear);
+//   },
 
-  initializeProperties(name, birthYear) {
-    this.name = name;
-    this.birthYear = birthYear;
-  },
+//   initializeProperties(name, birthYear) {
+//     this.name = name;
+//     this.birthYear = birthYear;
+//   },
 
-  sayHiTo(name) {
-    console.log(`Hi ${name}! I'm ${this.name} 🙋‍♂️`);
-  },
-};
+//   sayHiTo(name) {
+//     console.log(`Hi ${name}! I'm ${this.name} 🙋‍♂️`);
+//   },
+// };
 
-const StudentPrototype = Object.create(PersonPrototype);
+// const StudentPrototype = Object.create(PersonPrototype);
 
-StudentPrototype.initializeProperties = function (name, birthYear, degree) {
-  PersonPrototype.initializeProperties.call(this, name, birthYear);
-  this.degree = degree;
-};
+// StudentPrototype.initializeProperties = function (name, birthYear, degree) {
+//   PersonPrototype.initializeProperties.call(this, name, birthYear);
+//   this.degree = degree;
+// };
 
-const matt = Object.create(StudentPrototype);
-matt.initializeProperties("Matt", 1890, "Master of Philosophy");
-matt; // { name: "Matt", birthYear: 1890, degree: "Master of Philosophy" }
-matt.sayHiTo("Jennifer"); // Hi Jennifer! I'm Matt 🙋‍♂️
-matt.calculateAge(); // 136
+// const matt = Object.create(StudentPrototype);
+// matt.initializeProperties("Matt", 1890, "Master of Philosophy");
+// matt; // { name: "Matt", birthYear: 1890, degree: "Master of Philosophy" }
+// matt.sayHiTo("Jennifer"); // Hi Jennifer! I'm Matt 🙋‍♂️
+// matt.calculateAge(); // 136
+//#endregion
+
+//#region 235. Constructor design: Object Invariants and Internal State Ownership
+class Account {
+  constructor(movements) {
+    // should be an array
+    this.movements = movements;
+  }
+}
+
+// Mandatory repetition of initialization instead of inside the class
+const joe = new Account([]); // { movements: [] }
+const jane = new Account([]); // { movements: [] }
+// No invariant enforcement
+const jil = new Account("bla"); // { movements: "bla" }
+
+class Account {
+  // The constructor should only accept the data required to create a valid initial object state
+  constructor(owner, password, currency) {
+    this.owner = owner;
+    this.password = password;
+    this.currency = currency;
+    // Initialize the collection (array) directly so the invariant holds (=> movements is always an array)
+    this.movements = [];
+  }
+
+  deposit(amount) {
+    this.movements.push(Math.abs(amount));
+  }
+
+  withdraw(amount) {
+    this.movements.push(-Math.abs(amount));
+  }
+}
+
+const mia = new Account("Mia", 12345678, "EUR");
 //#endregion

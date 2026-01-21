@@ -140,3 +140,66 @@
 // ev.chargeBattery(80);
 // console.log(ev); // { make: "Tesla", speed: "135 km/h", charge: "80%" }
 //#endregion
+
+//////////////////////////////////////////////////////////////////////
+//#region Coding Challenge #4
+//////////////////////////////////////////////////////////////////////
+// 1. Re-create Challenge #3, but this time using ES6 classes: create an 'EVCl' child class of the 'CarCl' class
+// 2. Make the 'charge' property private
+// 3. Implement the ability to chain the 'accelerate' and 'chargeBattery' methods of this class, and also update the 'brake' method in the 'CarCl' class. Then experiment with chaining!
+// Test data:
+// - Data car 1: 'Rivian' going at 120 km/h, with a charge of 23%
+
+class Car {
+  constructor(make, speed) {
+    this.make = make;
+    this.speed = speed;
+  }
+
+  accelerate() {
+    this.speed = parseInt(this.speed) + 10 + " km/h";
+    console.log(this.speed);
+    return this;
+  }
+
+  brake() {
+    this.speed = parseInt(this.speed) - 5 + " km/h";
+    console.log(this.speed);
+    return this;
+  }
+}
+
+class EV extends Car {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    if (parseFloat(this.#charge) < chargeTo) this.#charge = `${chargeTo}%`;
+
+    return this;
+  }
+
+  accelerate() {
+    this.speed = `${parseInt(this.speed) + 20} km/h`;
+    this.#charge = `${parseFloat(this.#charge) - 1}%`;
+
+    console.log(
+      `${this.make} going at ${this.speed}, with a charge of ${this.#charge}`
+    );
+
+    return this;
+  }
+}
+
+const ev = new EV("Rivian", "120 km/h", "23%");
+console.log(ev); // { make: "Tesla", speed: "120 km/h", charge: "23%" }
+ev.accelerate().accelerate().accelerate().brake().brake(); // Tesla going at 140 km/h, with a charge of 22%
+ev.brake(); // 135 km/h
+ev.chargeBattery(80);
+console.log(ev); // { make: "Tesla", speed: "135 km/h", charge: "80%" }
+//#endregion

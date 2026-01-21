@@ -417,48 +417,48 @@
 
 //#region 237. Chaining Methods
 // class methods can be chained on methods that return the object with `this`
-class Account {
-  // private fields
-  #owner;
-  #password;
-  #movements = [];
+// class Account {
+//   // private fields
+//   #owner;
+//   #password;
+//   #movements = [];
 
-  constructor(owner, password, currency) {
-    this.#owner = owner;
-    this.#password = password;
-    this.currency = currency;
-  }
+//   constructor(owner, password, currency) {
+//     this.#owner = owner;
+//     this.#password = password;
+//     this.currency = currency;
+//   }
 
-  // public methods
-  deposit(amount) {
-    this.#movements.push(Math.abs(amount));
-    this.#printBalance();
-    return this;
-  }
+//   // public methods
+//   deposit(amount) {
+//     this.#movements.push(Math.abs(amount));
+//     this.#printBalance();
+//     return this;
+//   }
 
-  withdraw(amount) {
-    this.#movements.push(-Math.abs(amount));
-    this.#printBalance();
-    return this;
-  }
+//   withdraw(amount) {
+//     this.#movements.push(-Math.abs(amount));
+//     this.#printBalance();
+//     return this;
+//   }
 
-  // private method
-  #printBalance() {
-    console.log(
-      this.#movements.reduce(
-        (previousVal, currentVal) => previousVal + currentVal
-      )
-    );
-  }
-}
+//   // private method
+//   #printBalance() {
+//     console.log(
+//       this.#movements.reduce(
+//         (previousVal, currentVal) => previousVal + currentVal
+//       )
+//     );
+//   }
+// }
 
-const jason = new Account("Jason", 123456, "CHF");
+// const jason = new Account("Jason", 123456, "CHF");
 
-jason
-  .deposit(100)
-  .deposit(100)
-  .deposit(100)
-  .withdraw(10)
-  .withdraw(10)
-  .withdraw(10);
+// jason
+//   .deposit(100)
+//   .deposit(100)
+//   .deposit(100)
+//   .withdraw(10)
+//   .withdraw(10)
+//   .withdraw(10);
 //#endregion

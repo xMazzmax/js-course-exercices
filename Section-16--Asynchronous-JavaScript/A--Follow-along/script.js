@@ -225,6 +225,74 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 266. Handling Rejected Promises
 ///////////////////////////////////
+// const renderCountry = function (
+//   country,
+//   { isNeighboringCountry = false } = {},
+// ) {
+//   const countryTemplate = document.getElementById("country-template");
+
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
+
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//     countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
+
+//   imageElement.src = country.flag;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = (country.population / 1000000).toFixed(1);
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
+
+//   countriesContainer.append(countryTemplateClone);
+// };
+
+// const renderError = function (errorMessage) {
+//   countriesContainer.insertAdjacentText("beforeend", errorMessage);
+// };
+
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v2/name/${country}`)
+//     .then(response => {
+//       return response.json();
+//     })
+//     .then(countries => {
+//       const countryNeighborCode = countries[0].borders?.[0];
+
+//       renderCountry(countries[0]);
+
+//       if (!countryNeighborCode) return;
+//       return fetch(`https://restcountries.com/v2/alpha/${countryNeighborCode}`);
+//     })
+//     .then(response => response.json())
+//     .then(countryNeighbor =>
+//       renderCountry(countryNeighbor, { isNeighboringCountry: true }),
+//     )
+//     .catch(error => {
+//       console.error(error);
+//       renderError(`Error: ${error.message}`);
+//     })
+//     // Always executes after the chain above it is settled, regardless of whether fulfilled or rejected
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
+// btn.addEventListener("click", () => getCountryData("Poland"));
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 267. Throwing Errors Manually
+///////////////////////////////////
+
 const renderCountry = function (
   country,
   { isNeighboringCountry = false } = {},
@@ -258,33 +326,81 @@ const renderError = function (errorMessage) {
   countriesContainer.insertAdjacentText("beforeend", errorMessage);
 };
 
+// // get data with regular fetch() and .then() methods
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v2/name/${country}`)
+//     .then(response => {
+//       if (!response.ok)
+//         throw new Error(`Error: ${response.status} Country not found`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       renderCountry(data[0]);
+//       const codeOfNeighboringCountry = data[0].borders?.[0];
+//       return fetch(
+//         `https://restcountries.com/v2/alpha/${codeOfNeighboringCountry}`,
+//       );
+//     })
+//     .then(response => {
+//       if (!response.ok)
+//         throw new Error(
+//           `Error: ${response.status} Neighboring country not found`,
+//         );
+//       return response.json();
+//     })
+//     .then(neighboringCountry =>
+//       renderCountry(neighboringCountry, { isNeighboringCountry: true }),
+//     )
+//     .catch(error => {
+//       console.error(error);
+//       renderError(`${error.message}`);
+//     })
+//     // Executes a callback when the Promise is settled (fulfilled or rejected)
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
+const fetchDataAndReturnJSON = function (url, errorMessage) {
+  return fetch(url).then(response => {
+    if (!response.ok)
+      throw new Error(`Error: ${response.status} ${errorMessage}`);
+
+    return response.json();
+  });
+};
+
+// get data with a DRY helper function
 const getCountryData = function (country) {
-  fetch(`https://restcountries.com/v2/name/${country}`)
-    .then(response => {
-      return response.json();
-    })
-    .then(countries => {
-      const countryNeighborCode = countries[0].borders?.[0];
+  fetchDataAndReturnJSON(
+    `https://restcountries.com/v2/name/${country}`,
+    "Country not found",
+  )
+    .then(data => {
+      const countryNeighborCode = data[0].borders?.[0];
+      renderCountry(data[0]);
 
-      renderCountry(countries[0]);
+      if (!countryNeighborCode)
+        throw new Error("Neighboring country not found.");
 
-      if (!countryNeighborCode) return;
-      return fetch(`https://restcountries.com/v2/alpha/${countryNeighborCode}`);
+      return fetchDataAndReturnJSON(
+        `https://restcountries.com/v2/name/${countryNeighborCode}`,
+        "Neighboring country not found",
+      );
     })
-    .then(response => response.json())
     .then(countryNeighbor =>
-      renderCountry(countryNeighbor, { isNeighboringCountry: true }),
+      renderCountry(countryNeighbor[0], { isNeighboringCountry: true }),
     )
     .catch(error => {
       console.error(error);
-      renderError(`Error: ${error.message}`);
+      renderError(`${error.message}`);
     })
-    // Always executes after the chain above it is settled, regardless of whether fulfilled or rejected
+    // Executes a callback when the Promise is settled (fulfilled or rejected)
     .finally(() => {
       countriesContainer.style.opacity = 1;
     });
 };
 
-btn.addEventListener("click", () => getCountryData("Poland"));
+btn.addEventListener("click", () => getCountryData("Brazil"));
 // #endregion
 //////////////////////////////////////////////////////////////////////

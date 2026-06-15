@@ -432,25 +432,110 @@ const countriesContainer = document.querySelector(".countries");
 //   }, 1000);
 // }, 1000);
 
-// With promisifying:
-const waitSeconds = seconds => {
-  return new Promise(resolve => {
-    setTimeout(resolve, seconds * 1000);
+// // With promisifying:
+// const waitSeconds = seconds => {
+//   return new Promise(resolve => {
+//     setTimeout(resolve, seconds * 1000);
+//   });
+// };
+
+// waitSeconds(1)
+//   .then(() => {
+//     console.log("1 second passed");
+//     return waitSeconds(1);
+//   })
+//   .then(() => {
+//     console.log("2 seconds passed");
+//     return waitSeconds(1);
+//   })
+//   .then(() => {
+//     console.log("3 seconds passed");
+//     return waitSeconds(1);
+//   });
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 272. Promisifying the Geolocation API
+///////////////////////////////////
+const getLocation = () =>
+  new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
   });
+
+const renderCountry = function (
+  country,
+  { isNeighboringCountry = false } = {},
+) {
+  const countryTemplate = document.getElementById("country-template");
+
+  const countryTemplateClone = countryTemplate.content.cloneNode(true);
+
+  const countryElement = countryTemplateClone.querySelector(".country");
+  const imageElement = countryTemplateClone.querySelector(".country__img");
+  const nameElement = countryTemplateClone.querySelector(".country__name");
+  const regionElement = countryTemplateClone.querySelector(".country__region");
+  const populationElement =
+    countryTemplateClone.querySelector("[data-population]");
+  const languageElement = countryTemplateClone.querySelector("[data-language]");
+  const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+
+  if (isNeighboringCountry) countryElement.classList.add("neighbour");
+
+  imageElement.src = country.flag;
+  nameElement.textContent = country.name;
+  regionElement.textContent = country.region;
+  populationElement.textContent = (country.population / 1000000).toFixed(1);
+  languageElement.textContent = country.languages[0].name;
+  currencyElement.textContent = country.currencies[0].name;
+
+  countriesContainer.append(countryTemplateClone);
 };
 
-waitSeconds(1)
-  .then(() => {
-    console.log("1 second passed");
-    return waitSeconds(1);
-  })
-  .then(() => {
-    console.log("2 seconds passed");
-    return waitSeconds(1);
-  })
-  .then(() => {
-    console.log("3 seconds passed");
-    return waitSeconds(1);
-  });
+const whereAmI = function () {
+  getLocation()
+    .then(result => {
+      const { latitude: lat, longitude: lng } = result.coords;
+
+      return fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+      );
+    })
+    .then(response => {
+      if (!response.ok) {
+        const errorMessage = response.message;
+        countriesContainer.textContent = errorMessage;
+        throw new Error(errorMessage);
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      if (!data.countryCode) {
+        const errorMessage = "You're not in a country or city";
+        countriesContainer.textContent = errorMessage;
+        throw new Error("You're not in a country or city");
+      }
+      console.log(`You are in ${data.city}, ${data.countryName}`);
+      return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
+    })
+    .then(response => {
+      if (!response.ok) {
+        const errorMessage = `${response.status} ${response.statusText}`;
+        countriesContainer.textContent = errorMessage;
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      const [country] = data;
+      renderCountry(country);
+    })
+    .catch(error => console.error(error.message))
+    .finally(() => (countriesContainer.style.opacity = 1));
+};
+
+btn.addEventListener("click", () => whereAmI());
 // #endregion
 //////////////////////////////////////////////////////////////////////

@@ -293,38 +293,38 @@ const countriesContainer = document.querySelector(".countries");
 // #region 267. Throwing Errors Manually
 ///////////////////////////////////
 
-const renderCountry = function (
-  country,
-  { isNeighboringCountry = false } = {},
-) {
-  const countryTemplate = document.getElementById("country-template");
+// const renderCountry = function (
+//   country,
+//   { isNeighboringCountry = false } = {},
+// ) {
+//   const countryTemplate = document.getElementById("country-template");
 
-  const countryTemplateClone = countryTemplate.content.cloneNode(true);
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
 
-  const countryElement = countryTemplateClone.querySelector(".country");
-  const imageElement = countryTemplateClone.querySelector(".country__img");
-  const nameElement = countryTemplateClone.querySelector(".country__name");
-  const regionElement = countryTemplateClone.querySelector(".country__region");
-  const populationElement =
-    countryTemplateClone.querySelector("[data-population]");
-  const languageElement = countryTemplateClone.querySelector("[data-language]");
-  const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//     countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
 
-  if (isNeighboringCountry) countryElement.classList.add("neighbour");
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
 
-  imageElement.src = country.flag;
-  nameElement.textContent = country.name;
-  regionElement.textContent = country.region;
-  populationElement.textContent = (country.population / 1000000).toFixed(1);
-  languageElement.textContent = country.languages[0].name;
-  currencyElement.textContent = country.currencies[0].name;
+//   imageElement.src = country.flag;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = (country.population / 1000000).toFixed(1);
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
 
-  countriesContainer.append(countryTemplateClone);
-};
+//   countriesContainer.append(countryTemplateClone);
+// };
 
-const renderError = function (errorMessage) {
-  countriesContainer.insertAdjacentText("beforeend", errorMessage);
-};
+// const renderError = function (errorMessage) {
+//   countriesContainer.insertAdjacentText("beforeend", errorMessage);
+// };
 
 // // get data with regular fetch() and .then() methods
 // const getCountryData = function (country) {
@@ -361,46 +361,64 @@ const renderError = function (errorMessage) {
 //     });
 // };
 
-const fetchDataAndReturnJSON = function (url, errorMessage) {
-  return fetch(url).then(response => {
-    if (!response.ok)
-      throw new Error(`Error: ${response.status} ${errorMessage}`);
+// const fetchDataAndReturnJSON = function (url, errorMessage) {
+//   return fetch(url).then(response => {
+//     if (!response.ok)
+//       throw new Error(`Error: ${response.status} ${errorMessage}`);
 
-    return response.json();
-  });
-};
+//     return response.json();
+//   });
+// };
 
-// get data with a DRY helper function
-const getCountryData = function (country) {
-  fetchDataAndReturnJSON(
-    `https://restcountries.com/v2/name/${country}`,
-    "Country not found",
-  )
-    .then(data => {
-      const countryNeighborCode = data[0].borders?.[0];
-      renderCountry(data[0]);
+// // get data with a DRY helper function
+// const getCountryData = function (country) {
+//   fetchDataAndReturnJSON(
+//     `https://restcountries.com/v2/name/${country}`,
+//     "Country not found",
+//   )
+//     .then(data => {
+//       const countryNeighborCode = data[0].borders?.[0];
+//       renderCountry(data[0]);
 
-      if (!countryNeighborCode)
-        throw new Error("Neighboring country not found.");
+//       if (!countryNeighborCode)
+//         throw new Error("Neighboring country not found.");
 
-      return fetchDataAndReturnJSON(
-        `https://restcountries.com/v2/name/${countryNeighborCode}`,
-        "Neighboring country not found",
-      );
-    })
-    .then(countryNeighbor =>
-      renderCountry(countryNeighbor[0], { isNeighboringCountry: true }),
-    )
-    .catch(error => {
-      console.error(error);
-      renderError(`${error.message}`);
-    })
-    // Executes a callback when the Promise is settled (fulfilled or rejected)
-    .finally(() => {
-      countriesContainer.style.opacity = 1;
-    });
-};
+//       return fetchDataAndReturnJSON(
+//         `https://restcountries.com/v2/name/${ countryNeighborCode}`,
+//         "Neighboring country not found",
+//       );
+//     })
+//     .then(countryNeighbor =>
+//       renderCountry(countryNeighbor[0], { isNeighboringCountry: true }),
+//     )
+//     .catch(error => {
+//       console.error(error);
+//       renderError(`${error.message}`);
+//     })
+//     // Executes a callback when the Promise is settled (fulfilled or rejected)
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
 
-btn.addEventListener("click", () => getCountryData("Brazil"));
+// btn.addEventListener("click", () => getCountryData("Brazil"));
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 271. Building a Simple Promise
+///////////////////////////////////
+const lotteryPromise = new Promise((resolve, reject) => {
+  console.log("Lottery draw just started... 🎡");
+  setTimeout(() => {
+    Math.random() >= 0.5
+      ? resolve("You won! 🤑")
+      : reject(new Error("You lost. 🤷‍♂️"));
+  }, 2000);
+});
+
+lotteryPromise
+  .then(response => console.log(response))
+  .catch(error => console.error(error));
 // #endregion
 //////////////////////////////////////////////////////////////////////

@@ -3,90 +3,90 @@
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
 
-const renderCountry = function (
-  country,
-  { isNeighboringCountry = false } = {},
-) {
-  const countryTemplate = document.getElementById("country-template");
+// const renderCountry = function (
+//   country,
+//   { isNeighboringCountry = false } = {},
+// ) {
+//   const countryTemplate = document.getElementById("country-template");
 
-  const countryTemplateClone = countryTemplate.content.cloneNode(true);
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
 
-  const countryElement = countryTemplateClone.querySelector(".country");
-  const imageElement = countryTemplateClone.querySelector(".country__img");
-  const nameElement = countryTemplateClone.querySelector(".country__name");
-  const regionElement = countryTemplateClone.querySelector(".country__region");
-  const populationElement =
-    countryTemplateClone.querySelector("[data-population]");
-  const languageElement = countryTemplateClone.querySelector("[data-language]");
-  const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//     countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
 
-  if (isNeighboringCountry) countryElement.classList.add("neighbour");
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
 
-  imageElement.src = country.flag;
-  nameElement.textContent = country.name;
-  regionElement.textContent = country.region;
-  populationElement.textContent = (country.population / 1000000).toFixed(1);
-  languageElement.textContent = country.languages[0].name;
-  currencyElement.textContent = country.currencies[0].name;
+//   imageElement.src = country.flag;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = (country.population / 1000000).toFixed(1);
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
 
-  countriesContainer.append(countryTemplateClone);
-};
+//   countriesContainer.append(countryTemplateClone);
+// };
 
 //////////////////////////////////////////////////////////////////////
-//#region Coding Challenge #1
+// #region Coding Challenge #1
 //////////////////////////////////////////////////////////////////////
 // In this challenge you will build a function 'whereAmI' which renders a country only based on GPS coordinates. For that, you will use a second API to geocode coordinates. So in this challenge, you’ll use an API on your own for the first time
 
-const whereAmI = function (lat, lng) {
-  fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
-  )
-    .then(response => {
-      if (response.status == 403) {
-        const errorMessage = `${response.status} Exceeded the max amount of 3 requests per second`;
-        countriesContainer.textContent = errorMessage;
-        throw new Error(errorMessage);
-      }
+// const whereAmI = function (lat, lng) {
+//   fetch(
+//     `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+//   )
+//     .then(response => {
+//       if (response.status == 403) {
+//         const errorMessage = `${response.status} Exceeded the max amount of 3 requests per second`;
+//         countriesContainer.textContent = errorMessage;
+//         throw new Error(errorMessage);
+//       }
 
-      if (!response.ok) {
-        const errorMessage = `${response.status} ${response.statusText}`;
-        countriesContainer.textContent = errorMessage;
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
+//       if (!response.ok) {
+//         const errorMessage = `${response.status} ${response.statusText}`;
+//         countriesContainer.textContent = errorMessage;
+//         throw new Error(`${response.status} ${response.statusText}`);
+//       }
 
-      return response.json();
-    })
-    .then(data => {
-      if (!data.countryCode) {
-        const errorMessage = "You're not in a country or city";
-        countriesContainer.textContent = errorMessage;
-        throw new Error("You're not in a country or city");
-      }
-      console.log(`You are in ${data.city}, ${data.countryName}`);
-      return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
-    })
-    .then(response => {
-      if (!response.ok) {
-        const errorMessage = `${response.status} ${response.statusText}`;
-        countriesContainer.textContent = errorMessage;
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
+//       return response.json();
+//     })
+//     .then(data => {
+//       if (!data.countryCode) {
+//         const errorMessage = "You're not in a country or city";
+//         countriesContainer.textContent = errorMessage;
+//         throw new Error("You're not in a country or city");
+//       }
+//       console.log(`You are in ${data.city}, ${data.countryName}`);
+//       return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
+//     })
+//     .then(response => {
+//       if (!response.ok) {
+//         const errorMessage = `${response.status} ${response.statusText}`;
+//         countriesContainer.textContent = errorMessage;
+//         throw new Error(`${response.status} ${response.statusText}`);
+//       }
 
-      return response.json();
-    })
-    .then(data => {
-      const [country] = data;
-      console.log(country);
-      renderCountry(country);
-    })
-    .catch(error => console.error(error))
-    .finally(() => (countriesContainer.style.opacity = 1));
-};
+//       return response.json();
+//     })
+//     .then(data => {
+//       const [country] = data;
+//       console.log(country);
+//       renderCountry(country);
+//     })
+//     .catch(error => console.error(error))
+//     .finally(() => (countriesContainer.style.opacity = 1));
+// };
 
-// btn.addEventListener("click", () => whereAmI(-80.0, 0.0));
-// btn.addEventListener("click", () => whereAmI(52.508, 13.381));
-// btn.addEventListener("click", () => whereAmI(19.037, 72.873));
-btn.addEventListener("click", () => whereAmI(-33.933, 18.474));
+// // btn.addEventListener("click", () => whereAmI(-80.0, 0.0));
+// // btn.addEventListener("click", () => whereAmI(52.508, 13.381));
+// // btn.addEventListener("click", () => whereAmI(19.037, 72.873));
+// btn.addEventListener("click", () => whereAmI(-33.933, 18.474));
 
 // Your tasks:
 // PART 1
@@ -110,3 +110,45 @@ btn.addEventListener("click", () => whereAmI(-33.933, 18.474));
 // - Coordinates 2: 19.037, 72.873
 // - Coordinates 3: -33.933, 18.474
 //#endregion
+
+//////////////////////////////////////////////////////////////////////
+// #region Coding Challenge #2
+///////////////////////////////////
+const imageContainer = document.querySelector(".images");
+btn.classList.add("hidden");
+countriesContainer.classList.add("hidden");
+
+const wait = seconds =>
+  new Promise(resolve => setTimeout(() => resolve(), seconds * 1000));
+
+const createImage = imgPath => {
+  return new Promise((resolve, reject) => {
+    const imgElement = document.createElement("img");
+    imgElement.src = imgPath;
+
+    imgElement.addEventListener("load", () => {
+      imageContainer.append(imgElement);
+      resolve(imgElement);
+    });
+    imgElement.addEventListener("error", () => {
+      reject(new Error("Image not found."));
+    });
+  });
+};
+
+createImage("img/img-1.jpg")
+  .then(() => {
+    return wait(2);
+  })
+  .then(() => {
+    imageContainer.firstElementChild.classList.add("hidden");
+    return createImage("img/img-2.jpg");
+  })
+  .then(result => {
+    imageContainer.firstElementChild.replaceWith(result);
+    return wait(2);
+  })
+  .then(() => imageContainer.lastElementChild.classList.add("hidden"))
+  .catch(error => console.error(error));
+// #endregion
+//////////////////////////////////////////////////////////////////////

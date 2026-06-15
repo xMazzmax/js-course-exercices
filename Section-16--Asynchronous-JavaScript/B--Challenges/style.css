@@ -27,7 +27,7 @@ body {
 }
 
 .countries {
-  /* margin-bottom: 8rem; */
+  margin-bottom: 8rem;
   display: flex;
   font-size: 2rem;
   opacity: 0;
@@ -106,6 +106,10 @@ body {
   color: white;
   background-color: orangered;
   cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .images {

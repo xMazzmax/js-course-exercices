@@ -408,17 +408,49 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 271. Building a Simple Promise
 ///////////////////////////////////
-const lotteryPromise = new Promise((resolve, reject) => {
-  console.log("Lottery draw just started... 🎡");
-  setTimeout(() => {
-    Math.random() >= 0.5
-      ? resolve("You won! 🤑")
-      : reject(new Error("You lost. 🤷‍♂️"));
-  }, 2000);
-});
+// const lotteryPromise = new Promise((resolve, reject) => {
+//   console.log("Lottery draw just started... 🎡");
+//   setTimeout(() => {
+//     Math.random() >= 0.5
+//       ? resolve("You won! 🤑")
+//       : reject(new Error("You lost. 🤷‍♂️"));
+//   }, 2000);
+// });
 
-lotteryPromise
-  .then(response => console.log(response))
-  .catch(error => console.error(error));
+// lotteryPromise
+//   .then(response => console.log(response))
+//   .catch(error => console.error(error));
+
+// // Without promisifying:
+// setTimeout(() => {
+//   console.log("1 second passed");
+//   setTimeout(() => {
+//     console.log("2 seconds passed");
+//     setTimeout(() => {
+//       console.log("3 seconds passed");
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+// With promisifying:
+const waitSeconds = seconds => {
+  return new Promise(resolve => {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+waitSeconds(1)
+  .then(() => {
+    console.log("1 second passed");
+    return waitSeconds(1);
+  })
+  .then(() => {
+    console.log("2 seconds passed");
+    return waitSeconds(1);
+  })
+  .then(() => {
+    console.log("3 seconds passed");
+    return waitSeconds(1);
+  });
 // #endregion
 //////////////////////////////////////////////////////////////////////

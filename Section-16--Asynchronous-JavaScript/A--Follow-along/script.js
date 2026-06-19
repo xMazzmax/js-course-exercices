@@ -543,16 +543,83 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 274. Consuming Promises with Async/Await
 ///////////////////////////////////
+// // unchanged code
+// const getLocation = () =>
+//   new Promise((resolve, reject) => {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+// // unchanged code
+// const renderCountry = function (
+//   country,
+//   { isNeighboringCountry = false } = {},
+// ) {
+//   const countryTemplate = document.getElementById("country-template");
+
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
+
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//     countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
+
+//   imageElement.src = country.flags.png;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = `${(country.population / 1000000).toFixed(1)}M`;
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
+
+//   countriesContainer.append(countryTemplateClone);
+// };
+
+// // each "await" pauses the execution of the whereAmI() function until the
+// // awaited Promise is fulfilled
+// // the whereAmI() function as a whole remains async, so await doesn't
+// // block the main thread
+// // the resolved value of the Promise is assigned to the defined variable
+
+// // async/await is syntactic sugar built on top of Promises. Under the
+// // hood, an async function still returns a Promise. It's simply done
+// // using await and variables instead of .then() chains for better
+// // readability.
+// const whereAmI = async () => {
+//   const currentLocation = await getLocation();
+//   const { latitude: lat, longitude: lng } = currentLocation.coords;
+//   const currentReverseGeocodeResponse = await fetch(
+//     `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+//   );
+//   const currentReverseGeocodeData = await currentReverseGeocodeResponse.json();
+
+//   const countryResponse = await fetch(
+//     `https://corsproxy.io/?url=https://www.apicountries.com/name/${currentReverseGeocodeData.countryName}`,
+//   );
+//   const [countryData] = await countryResponse.json();
+//   renderCountry(countryData);
+//   countriesContainer.style.opacity = 1;
+//   console.log("This gets executed second");
+// };
+
+// btn.addEventListener("click", () => whereAmI());
+// console.log("This gets executed first");
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 275. Error Handling With try...catch
+///////////////////////////////////
 // unchanged code
 const getLocation = () =>
   new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 // unchanged code
-const renderCountry = function (
-  country,
-  { isNeighboringCountry = false } = {},
-) {
+const renderCountry = (country, { isNeighboringCountry = false } = {}) => {
   const countryTemplate = document.getElementById("country-template");
 
   const countryTemplateClone = countryTemplate.content.cloneNode(true);
@@ -578,34 +645,19 @@ const renderCountry = function (
   countriesContainer.append(countryTemplateClone);
 };
 
-// each "await" pauses the execution of the whereAmI() function until the
-// awaited Promise is fulfilled
-// the whereAmI() function as a whole remains async, so await doesn't
-// block the main thread
-// the resolved value of the Promise is assigned to the defined variable
-
-// async/await is syntactic sugar built on top of Promises. Under the
-// hood, an async function still returns a Promise. It's simply done
-// using await and variables instead of .then() chains for better
-// readability.
 const whereAmI = async () => {
-  const currentLocation = await getLocation();
-  const { latitude: lat, longitude: lng } = currentLocation.coords;
-  const currentReverseGeocodeResponse = await fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
-  );
-  const currentReverseGeocodeData = await currentReverseGeocodeResponse.json();
-
-  const countryResponse = await fetch(
-    `https://corsproxy.io/?url=https://www.apicountries.com/name/${currentReverseGeocodeData.countryName}`,
-  );
-  const [countryData] = await countryResponse.json();
-  renderCountry(countryData);
-  countriesContainer.style.opacity = 1;
-  console.log("This gets executed second");
+  try {
+    const countryResponse = await fetch(
+      "https://corsproxy.io/?url=https://www.apicountries.com/name/Switzerland",
+    );
+    if (!countryResponse.ok) throw new Error("Failed to fetch country.");
+    const [countryJSON] = await countryResponse.json();
+    renderCountry(countryJSON);
+    countriesContainer.style.opacity = 1;
+    console.log("This gets executed last.");
+  } catch (error) {
+    console.error(`An error occured: ${error.message}`);
+  }
 };
-
-btn.addEventListener("click", () => whereAmI());
-console.log("This gets executed first");
 // #endregion
 //////////////////////////////////////////////////////////////////////

@@ -458,11 +458,97 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 272. Promisifying the Geolocation API
 ///////////////////////////////////
+// const getLocation = () =>
+//   new Promise((resolve, reject) => {
+//     navigator.geolocation.getCurrentPosition(resolve, reject);
+//   });
+
+// const renderCountry = function (
+//   country,
+//   { isNeighboringCountry = false } = {},
+// ) {
+//   const countryTemplate = document.getElementById("country-template");
+
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
+
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//   countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
+
+//   imageElement.src = country.flag;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = (country.population / 1000000).toFixed(1);
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
+
+//   countriesContainer.append(countryTemplateClone);
+// };
+
+// const whereAmI = function () {
+//   getLocation()
+//   .then(result => {
+//     const { latitude: lat, longitude: lng } = result.coords;
+
+//     return fetch(
+//       `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+//     );
+//   })
+//   .then(response => {
+//     if (!response.ok) {
+//       const errorMessage = response.message;
+//       countriesContainer.textContent = errorMessage;
+//       throw new Error(errorMessage);
+//       }
+
+//       return response.json();
+//     })
+//     .then(data => {
+//       if (!data.countryCode) {
+//         const errorMessage = "You're not in a country or city";
+//         countriesContainer.textContent = errorMessage;
+//         throw new Error("You're not in a country or city");
+//       }
+//       console.log(`You are in ${data.city}, ${data.countryName}`);
+//       return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
+//     })
+//     .then(response => {
+//       if (!response.ok) {
+//         const errorMessage = `${response.status} ${response.statusText}`;
+//         countriesContainer.textContent = errorMessage;
+//         throw new Error(`${response.status} ${response.statusText}`);
+//       }
+
+//       return response.json();
+//     })
+//     .then(data => {
+//       const [country] = data;
+//       renderCountry(country);
+//     })
+//     .catch(error => console.error(error.message))
+//     .finally(() => (countriesContainer.style.opacity = 1));
+//   };
+
+//   btn.addEventListener("click", () => whereAmI());
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 274. Consuming Promises with Async/Await
+///////////////////////////////////
+// unchanged code
 const getLocation = () =>
   new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
-
+// unchanged code
 const renderCountry = function (
   country,
   { isNeighboringCountry = false } = {},
@@ -482,60 +568,44 @@ const renderCountry = function (
 
   if (isNeighboringCountry) countryElement.classList.add("neighbour");
 
-  imageElement.src = country.flag;
+  imageElement.src = country.flags.png;
   nameElement.textContent = country.name;
   regionElement.textContent = country.region;
-  populationElement.textContent = (country.population / 1000000).toFixed(1);
+  populationElement.textContent = `${(country.population / 1000000).toFixed(1)}M`;
   languageElement.textContent = country.languages[0].name;
   currencyElement.textContent = country.currencies[0].name;
 
   countriesContainer.append(countryTemplateClone);
 };
 
-const whereAmI = function () {
-  getLocation()
-    .then(result => {
-      const { latitude: lat, longitude: lng } = result.coords;
+// each "await" pauses the execution of the whereAmI() function until the
+// awaited Promise is fulfilled
+// the whereAmI() function as a whole remains async, so await doesn't
+// block the main thread
+// the resolved value of the Promise is assigned to the defined variable
 
-      return fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
-      );
-    })
-    .then(response => {
-      if (!response.ok) {
-        const errorMessage = response.message;
-        countriesContainer.textContent = errorMessage;
-        throw new Error(errorMessage);
-      }
+// async/await is syntactic sugar built on top of Promises. Under the
+// hood, an async function still returns a Promise. It's simply done
+// using await and variables instead of .then() chains for better
+// readability.
+const whereAmI = async () => {
+  const currentLocation = await getLocation();
+  const { latitude: lat, longitude: lng } = currentLocation.coords;
+  const currentReverseGeocodeResponse = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+  );
+  const currentReverseGeocodeData = await currentReverseGeocodeResponse.json();
 
-      return response.json();
-    })
-    .then(data => {
-      if (!data.countryCode) {
-        const errorMessage = "You're not in a country or city";
-        countriesContainer.textContent = errorMessage;
-        throw new Error("You're not in a country or city");
-      }
-      console.log(`You are in ${data.city}, ${data.countryName}`);
-      return fetch(`https://restcountries.com/v2/name/${data.countryName}`);
-    })
-    .then(response => {
-      if (!response.ok) {
-        const errorMessage = `${response.status} ${response.statusText}`;
-        countriesContainer.textContent = errorMessage;
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      return response.json();
-    })
-    .then(data => {
-      const [country] = data;
-      renderCountry(country);
-    })
-    .catch(error => console.error(error.message))
-    .finally(() => (countriesContainer.style.opacity = 1));
+  const countryResponse = await fetch(
+    `https://corsproxy.io/?url=https://www.apicountries.com/name/${currentReverseGeocodeData.countryName}`,
+  );
+  const [countryData] = await countryResponse.json();
+  renderCountry(countryData);
+  countriesContainer.style.opacity = 1;
+  console.log("This gets executed second");
 };
 
 btn.addEventListener("click", () => whereAmI());
+console.log("This gets executed first");
 // #endregion
 //////////////////////////////////////////////////////////////////////

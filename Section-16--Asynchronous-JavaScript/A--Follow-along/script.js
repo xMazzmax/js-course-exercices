@@ -613,11 +613,53 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 275. Error Handling With try...catch
 ///////////////////////////////////
-// unchanged code
-const getLocation = () =>
-  new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
+// // unchanged code
+// const renderCountry = (country, { isNeighboringCountry = false } = {}) => {
+//   const countryTemplate = document.getElementById("country-template");
+
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
+
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//     countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
+
+//   imageElement.src = country.flags.png;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = `${(country.population / 1000000).toFixed(1)}M`;
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
+
+//   countriesContainer.append(countryTemplateClone);
+// };
+
+// const whereAmI = async () => {
+//   try {
+//     const countryResponse = await fetch(
+//       "https://corsproxy.io/?url=https://www.apicountries.com/name/Switzerland",
+//     );
+//     if (!countryResponse.ok) throw new Error("Failed to fetch country.");
+//     const [countryJSON] = await countryResponse.json();
+//     renderCountry(countryJSON);
+//     countriesContainer.style.opacity = 1;
+//     console.log("This gets executed last.");
+//   } catch (error) {
+//     console.error(`An error occured: ${error.message}`);
+//   }
+// };
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 276. Returning Values from Async Functions
+///////////////////////////////////
 // unchanged code
 const renderCountry = (country, { isNeighboringCountry = false } = {}) => {
   const countryTemplate = document.getElementById("country-template");
@@ -648,16 +690,29 @@ const renderCountry = (country, { isNeighboringCountry = false } = {}) => {
 const whereAmI = async () => {
   try {
     const countryResponse = await fetch(
-      "https://corsproxy.io/?url=https://www.apicountries.com/name/Switzerland",
+      "https://corsproxy.io/?url=https://www.apicountries.com/name/Switzerlandd",
     );
     if (!countryResponse.ok) throw new Error("Failed to fetch country.");
-    const [countryJSON] = await countryResponse.json();
-    renderCountry(countryJSON);
+    const [countryData] = await countryResponse.json();
+    renderCountry(countryData);
     countriesContainer.style.opacity = 1;
-    console.log("This gets executed last.");
+    return countryData.name;
   } catch (error) {
-    console.error(`An error occured: ${error.message}`);
+    // needs to be rethrown again for it to be propagated to the outer
+    // function and be handled by it correctly
+    throw error;
   }
 };
-// #endregion
+
+(async function () {
+  try {
+    const country = await whereAmI();
+    console.log(country);
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  console.log("This gets executed last.");
+})();
+// #endregions
 //////////////////////////////////////////////////////////////////////

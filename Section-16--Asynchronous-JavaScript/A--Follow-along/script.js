@@ -660,59 +660,101 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 276. Returning Values from Async Functions
 ///////////////////////////////////
+// // unchanged code
+// const renderCountry = (country, { isNeighboringCountry = false } = {}) => {
+//   const countryTemplate = document.getElementById("country-template");
+
+//   const countryTemplateClone = countryTemplate.content.cloneNode(true);
+
+//   const countryElement = countryTemplateClone.querySelector(".country");
+//   const imageElement = countryTemplateClone.querySelector(".country__img");
+//   const nameElement = countryTemplateClone.querySelector(".country__name");
+//   const regionElement = countryTemplateClone.querySelector(".country__region");
+//   const populationElement =
+//     countryTemplateClone.querySelector("[data-population]");
+//   const languageElement = countryTemplateClone.querySelector("[data-language]");
+//   const currencyElement = countryTemplateClone.querySelector("[data-currency]");
+
+//   if (isNeighboringCountry) countryElement.classList.add("neighbour");
+
+//   imageElement.src = country.flags.png;
+//   nameElement.textContent = country.name;
+//   regionElement.textContent = country.region;
+//   populationElement.textContent = `${(country.population / 1000000).toFixed(1)}M`;
+//   languageElement.textContent = country.languages[0].name;
+//   currencyElement.textContent = country.currencies[0].name;
+
+//   countriesContainer.append(countryTemplateClone);
+// };
+
+// const whereAmI = async () => {
+//   try {
+//     const countryResponse = await fetch(
+//       "https://corsproxy.io/?url=https://www.apicountries.com/name/Switzerlandd",
+//     );
+//     if (!countryResponse.ok) throw new Error("Failed to fetch country.");
+//     const [countryData] = await countryResponse.json();
+//     renderCountry(countryData);
+//     countriesContainer.style.opacity = 1;
+//     return countryData.name;
+//   } catch (error) {
+//     // needs to be rethrown again for it to be propagated to the outer
+//     // function and be handled by it correctly
+//     throw error;
+//   }
+// };
+
+// (async function () {
+//   try {
+//     const country = await whereAmI();
+//     console.log(country);
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+
+//   console.log("This gets executed last.");
+// })();
+// #endregions
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 277. Running Promises in Parallel
+///////////////////////////////////
 // unchanged code
-const renderCountry = (country, { isNeighboringCountry = false } = {}) => {
-  const countryTemplate = document.getElementById("country-template");
+const getJSON = function (url, errorMsg = "Something went wrong") {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${response.status} ${errorMsg}`);
 
-  const countryTemplateClone = countryTemplate.content.cloneNode(true);
-
-  const countryElement = countryTemplateClone.querySelector(".country");
-  const imageElement = countryTemplateClone.querySelector(".country__img");
-  const nameElement = countryTemplateClone.querySelector(".country__name");
-  const regionElement = countryTemplateClone.querySelector(".country__region");
-  const populationElement =
-    countryTemplateClone.querySelector("[data-population]");
-  const languageElement = countryTemplateClone.querySelector("[data-language]");
-  const currencyElement = countryTemplateClone.querySelector("[data-currency]");
-
-  if (isNeighboringCountry) countryElement.classList.add("neighbour");
-
-  imageElement.src = country.flags.png;
-  nameElement.textContent = country.name;
-  regionElement.textContent = country.region;
-  populationElement.textContent = `${(country.population / 1000000).toFixed(1)}M`;
-  languageElement.textContent = country.languages[0].name;
-  currencyElement.textContent = country.currencies[0].name;
-
-  countriesContainer.append(countryTemplateClone);
+    return response.json();
+  });
 };
 
-const whereAmI = async () => {
+const getThreeCountriesAtOnce = async function (
+  firstCountry,
+  secondCountry,
+  thirdCountry,
+) {
   try {
-    const countryResponse = await fetch(
-      "https://corsproxy.io/?url=https://www.apicountries.com/name/Switzerlandd",
+    const countries = await Promise.all([
+      getJSON(
+        `https://corsproxy.io/?url=https://www.apicountries.com/name/${firstCountry}`,
+      ),
+      getJSON(
+        `https://corsproxy.io/?url=https://www.apicountries.com/name/${secondCountry}`,
+      ),
+      getJSON(
+        `https://corsproxy.io/?url=https://www.apicountries.com/name/${thirdCountry}`,
+      ),
+    ]);
+
+    countries.forEach(([country]) =>
+      console.log(`Capital of ${country.name}: ${country.capital}`),
     );
-    if (!countryResponse.ok) throw new Error("Failed to fetch country.");
-    const [countryData] = await countryResponse.json();
-    renderCountry(countryData);
-    countriesContainer.style.opacity = 1;
-    return countryData.name;
   } catch (error) {
-    // needs to be rethrown again for it to be propagated to the outer
-    // function and be handled by it correctly
-    throw error;
+    console.error(error);
   }
 };
 
-(async function () {
-  try {
-    const country = await whereAmI();
-    console.log(country);
-  } catch (error) {
-    console.error(error.message);
-  }
-
-  console.log("This gets executed last.");
-})();
+getThreeCountriesAtOnce("Switzerland", "Italy", "Sweden");
 // #endregions
 //////////////////////////////////////////////////////////////////////

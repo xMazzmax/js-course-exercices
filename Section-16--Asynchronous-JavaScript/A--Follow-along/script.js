@@ -720,41 +720,145 @@ const countriesContainer = document.querySelector(".countries");
 //////////////////////////////////////////////////////////////////////
 // #region 277. Running Promises in Parallel
 ///////////////////////////////////
-// unchanged code
-const getJSON = function (url, errorMsg = "Something went wrong") {
-  return fetch(url).then(response => {
-    if (!response.ok) throw new Error(`${response.status} ${errorMsg}`);
+// // unchanged code
+// const getJSON = function (url, errorMsg = "Something went wrong") {
+//   return fetch(url).then(response => {
+//     if (!response.ok) throw new Error(`${response.status} ${errorMsg}`);
 
-    return response.json();
+//     return response.json();
+//   });
+// };
+
+// const getThreeCountriesAtOnce = async function (
+//   firstCountry,
+//   secondCountry,
+//   thirdCountry,
+// ) {
+//   try {
+//     const countries = await Promise.all([
+//       getJSON(
+//         `https://corsproxy.io/?url=https://www.apicountries.com/name/${firstCountry}`,
+//       ),
+//       getJSON(
+//         `https://corsproxy.io/?url=https://www.apicountries.com/name/${secondCountry}`,
+//       ),
+//       getJSON(
+//         `https://corsproxy.io/?url=https://www.apicountries.com/name/${thirdCountry}`,
+//       ),
+//     ]);
+
+//     countries.forEach(([country]) =>
+//       console.log(`Capital of ${country.name}: ${country.capital}`),
+//     );
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+// getThreeCountriesAtOnce("Switzerland", "Italy", "Sweden");
+// #endregions
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region 278. Other Promise Combinators: race, allSettled and any
+///////////////////////////////////
+/////////////////
+// Promise.race()
+// It settles with the outcome of the first Promise that settles (✅/❌).
+
+// A) If that first Promise fulfills (✅), Promise.race() fulfills (✅) with the resolved value.
+function timeout(ms) {
+  return new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms);
   });
-};
+}
 
-const getThreeCountriesAtOnce = async function (
-  firstCountry,
-  secondCountry,
-  thirdCountry,
-) {
-  try {
-    const countries = await Promise.all([
-      getJSON(
-        `https://corsproxy.io/?url=https://www.apicountries.com/name/${firstCountry}`,
-      ),
-      getJSON(
-        `https://corsproxy.io/?url=https://www.apicountries.com/name/${secondCountry}`,
-      ),
-      getJSON(
-        `https://corsproxy.io/?url=https://www.apicountries.com/name/${thirdCountry}`,
-      ),
-    ]);
+// simulated API with a response time
+function fetchData(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(`✅ Data arrived after ${ms}ms`), ms);
+  });
+}
 
-    countries.forEach(([country]) =>
-      console.log(`Capital of ${country.name}: ${country.capital}`),
-    );
-  } catch (error) {
-    console.error(error);
-  }
-};
+Promise.race([fetchData(1000), fetchData(3000), timeout(2000)])
+  .then(result => console.log(result))
+  .catch(error => console.error(error.message));
+// => "✅ Data arrived after 1000ms"
 
-getThreeCountriesAtOnce("Switzerland", "Italy", "Sweden");
+// B) If it rejects (❌), Promise.race() rejects (❌) with the same
+// reason.
+function timeout(ms) {
+  return new Promise((_, reject) => {
+    setTimeout(() => reject(new Error(`Timed out after ${ms}ms`)), ms);
+  });
+}
+
+// simulated API with a response time
+function fetchData(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(`✅ Data arrived after ${ms}ms`), ms);
+  });
+}
+
+Promise.race([fetchData(3000), fetchData(4000), timeout(2000)])
+  .then(result => console.log(result))
+  .catch(error => console.error(error.message));
+// => "Timed out after 2000ms"
+
+// Use case: Race a Promise that might take too long or never settles
+// against a Promise that rejects inside a setTimeout() callback, like
+// in the example above
+
+/////////////////
+// Promise.allSettled()
+// It can only settle when all Promises are settled (✅&❌).
+
+// A) When all Promises ✅❌ settle, Promise.allSettled() ✅ fulfills
+// with an Array of objects that contain the status of the settled Promise and its resolved value or rejection reason.
+Promise.allSettled([
+  Promise.resolve("✅ First resolved."),
+  Promise.reject("❌ First rejected."),
+  Promise.resolve("✅ Second resolved."),
+  Promise.reject("❌ Second rejected."),
+])
+  .then(allSettledPromises => {
+    console.log(allSettledPromises);
+    // => [
+    // { status: "fulfilled", value: "✅ First resolved." },
+    // { status: "rejected", reason: "❌ First rejected." },
+    // { status: "fulfilled", value: "✅ Second resolved." },
+    // { status: "rejected", reason: "❌ Second rejected." },
+  })
+  .catch(error => console.error(error));
+
+/////////////////
+// Promise.any()
+// It settles when the FIRST Promise fulfills (✅) or ALL Promises reject
+// (❌).
+
+// A) When the FIRST one fulfills (✅), Promise.any() fulfills (✅) with
+// its resolved value.
+Promise.any([
+  Promise.reject("❌ First rejected"),
+  Promise.resolve("✅ First resolved"),
+])
+  .then(firstResolvedPromise => {
+    console.log(firstResolvedPromise);
+  })
+  .catch(aggregateError => console.error(aggregateError));
+// => "✅ First resolved"
+
+// B) When ALL of them reject (❌), Promise.any() rejects with an
+// AggregateError. aggregateError.errors contains an Array with the
+// reason of each rejection.
+Promise.any([
+  Promise.reject("❌ First rejected"),
+  Promise.reject("❌ Second rejected"),
+])
+  .then(firstResolvedPromise => {
+    console.log(firstResolvedPromise);
+  })
+  .catch(aggregateError => console.error(aggregateError));
+// => "AggregateError: No Promise in Promise.any was resolved"
 // #endregions
 //////////////////////////////////////////////////////////////////////

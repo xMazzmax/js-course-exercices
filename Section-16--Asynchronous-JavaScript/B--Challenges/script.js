@@ -110,9 +110,52 @@ const countriesContainer = document.querySelector(".countries");
 // - Coordinates 2: 19.037, 72.873
 // - Coordinates 3: -33.933, 18.474
 //#endregion
+//////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
 // #region Coding Challenge #2
+///////////////////////////////////
+// const imageContainer = document.querySelector(".images");
+// btn.classList.add("hidden");
+// countriesContainer.classList.add("hidden");
+
+// const wait = seconds =>
+//   new Promise(resolve => setTimeout(() => resolve(), seconds * 1000));
+
+// const createImage = imgPath => {
+//   return new Promise((resolve, reject) => {
+//     const imgElement = document.createElement("img");
+//     imgElement.src = imgPath;
+
+//     imgElement.addEventListener("load", () => {
+//       imageContainer.append(imgElement);
+//       resolve(imgElement);
+//     });
+//     imgElement.addEventListener("error", () => {
+//       reject(new Error("Image not found."));
+//     });
+//   });
+// };
+
+// createImage("img/img-1.jpg")
+//   .then(() => {
+//     return wait(2);
+//   })
+//   .then(() => {
+//     imageContainer.firstElementChild.classList.add("hidden");
+//     return createImage("img/img-2.jpg");
+//   })
+//   .then(result => {
+//     imageContainer.firstElementChild.replaceWith(result);
+//     return wait(2);
+//   })
+//   .then(() => imageContainer.lastElementChild.classList.add("hidden"))
+//   .catch(error => console.error(error));
+// #endregion
+//////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// #region Coding Challenge #3
 ///////////////////////////////////
 const imageContainer = document.querySelector(".images");
 btn.classList.add("hidden");
@@ -136,19 +179,35 @@ const createImage = imgPath => {
   });
 };
 
-createImage("img/img-1.jpg")
-  .then(() => {
-    return wait(2);
-  })
-  .then(() => {
-    imageContainer.firstElementChild.classList.add("hidden");
-    return createImage("img/img-2.jpg");
-  })
-  .then(result => {
-    imageContainer.firstElementChild.replaceWith(result);
-    return wait(2);
-  })
-  .then(() => imageContainer.lastElementChild.classList.add("hidden"))
-  .catch(error => console.error(error));
+// // PART 1:
+// const loadNPause = async () => {
+//   try {
+//     let image = await createImage("img/img-1.jpg");
+//     await wait(2);
+//     image.classList.add("hidden");
+
+//     image = await createImage("img/img-2.jpg");
+//     await wait(2);
+//     image.classList.add("hidden");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
+// loadNPause();
+
+// PART 2:
+const loadAll = async imgArr => {
+  try {
+    const imgs = imgArr.map(imgPath => createImage(imgPath));
+    console.log(imgs);
+    const result = await Promise.all(imgs);
+    result.forEach(result => result.classList.add("parallel"));
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+loadAll(["img/img-1.jpg", "img/img-2.jpg", "img/img-3.jpg"]);
 // #endregion
 //////////////////////////////////////////////////////////////////////
